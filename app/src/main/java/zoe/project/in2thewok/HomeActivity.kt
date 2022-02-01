@@ -35,17 +35,17 @@ class HomeActivity : AppCompatActivity() {
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(R.id.frame_layout, homeFragment)
+        replaceFragment(R.id.frag_layout, homeFragment)
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
-                R.id.home -> {replaceFragment(R.id.frame_layout, homeFragment)}
-                R.id.profile -> {replaceFragment(R.id.frame_layout, profileFragment)}
-                R.id.add -> {replaceFragment(R.id.frame_layout, addFragment)}
-                R.id.articles -> {replaceFragment(R.id.frame_layout, articleFragment)}
-                R.id.info -> {replaceFragment(R.id.frame_layout, infoFragment)}
+                R.id.home -> {replaceFragment(R.id.frag_layout, homeFragment)}
+                R.id.profile -> {replaceFragment(R.id.frag_layout, profileFragment)}
+                R.id.add -> {replaceFragment(R.id.frag_layout, addFragment)}
+                R.id.articles -> {replaceFragment(R.id.frag_layout, articleFragment)}
+                R.id.info -> {replaceFragment(R.id.frag_layout, infoFragment)}
             }
             true
         }
