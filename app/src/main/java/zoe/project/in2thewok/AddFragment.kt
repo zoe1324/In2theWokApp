@@ -113,7 +113,7 @@ class AddFragment : Fragment() {
 //        }
 //    }
     private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
-    val context = context?.applicationContext
+        val context = context?.applicationContext
         try {
         //            personCollectionRef.add(person).await()
         //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()

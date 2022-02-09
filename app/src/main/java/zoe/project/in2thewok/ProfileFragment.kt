@@ -5,7 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentProfileBinding
+import kotlinx.coroutines.Dispatchers as Dispatchers
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,7 +33,7 @@ class ProfileFragment : Fragment() {
 //    private var param2: String? = null
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-
+    private val postCollectionRef = Firebase.firestore.collection("posts")
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -40,12 +50,42 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
+    override fun onStart() {
+        super.onStart()
+        auth = Firebase.auth
+        retrievePosts()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch{
+
+        try{
+            val querySnapshot = postCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid)
+                .get()
+                .await()
+            val sb = StringBuilder()
+            for(document in querySnapshot.documents){
+                val post = document.toObject<Post>()
+                sb.append("$post\n") //append person followed by new line
+            }
+            // set string $ text to textview,
+            // so switch the co-routine context as UI can only be modified inside Main dispatchers
+            withContext(Dispatchers.Main){
+                val tvPosts = binding.tvPosts
+                tvPosts.text = sb.toString()
+            }
+        } catch (e: Exception){
+            val context = context?.applicationContext
+            withContext(Dispatchers.Main){
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 //    companion object {
 //        /**
 //         * Use this factory method to create a new instance of
