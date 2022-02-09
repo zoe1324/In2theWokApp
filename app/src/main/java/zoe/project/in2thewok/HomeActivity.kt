@@ -25,7 +25,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_home)
-        supportActionBar?.title = "Home"
+        supportActionBar?.title = "Hello" + Firebase.auth.currentUser?.displayName
         supportActionBar?.show()
         homeFragment = HomeFragment()
         profileFragment = ProfileFragment()
@@ -41,19 +41,35 @@ class HomeActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
-                R.id.home -> {replaceFragment(R.id.frag_layout, homeFragment)}
-                R.id.profile -> {replaceFragment(R.id.frag_layout, profileFragment)}
-                R.id.add -> {replaceFragment(R.id.frag_layout, addFragment)}
-                R.id.articles -> {replaceFragment(R.id.frag_layout, articleFragment)}
-                R.id.info -> {replaceFragment(R.id.frag_layout, infoFragment)}
+                R.id.home -> {
+                    replaceFragment(R.id.frag_layout, homeFragment)
+                    supportActionBar?.title = "Home"
+                }
+                R.id.profile -> {
+                    replaceFragment(R.id.frag_layout, profileFragment)
+                    supportActionBar?.title = "Profile"
+                }
+                R.id.add -> {
+                    replaceFragment(R.id.frag_layout, addFragment)
+                    supportActionBar?.title = "Create New Post"
+                }
+                R.id.articles -> {
+                    replaceFragment(R.id.frag_layout, articleFragment)
+                    supportActionBar?.title = "Fun Food Articles/Reminders to Eat Healthily"
+                }
+                R.id.info -> {
+                    replaceFragment(R.id.frag_layout, infoFragment)
+                    supportActionBar?.title = "Nutritional Information"
+                }
             }
             true
         }
     }
+
     override fun onStart() {
         super.onStart()
-//        setContentView(R.layout.activity_home)
         supportActionBar?.title = "Home"
+        supportActionBar?.title = "Hello " + Firebase.auth.currentUser?.displayName
         supportActionBar?.show()
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
@@ -65,17 +81,17 @@ class HomeActivity : AppCompatActivity() {
         beginTransaction().func().commit()
     }
 
-    fun AppCompatActivity.addFragment(frameId: Int, fragment: Fragment){
-        supportFragmentManager.doTransaction { add(frameId, fragment) }
-    }
+//    fun AppCompatActivity.addFragment(frameId: Int, fragment: Fragment){
+//        supportFragmentManager.doTransaction { add(frameId, fragment) }
+//    }
 
 
     fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
         supportFragmentManager.doTransaction{replace(frameId, fragment)}
     }
 
-    fun AppCompatActivity.removeFragment(fragment: Fragment) {
-        supportFragmentManager.doTransaction{remove(fragment)}
-    }
+//    fun AppCompatActivity.removeFragment(fragment: Fragment) {
+//        supportFragmentManager.doTransaction{remove(fragment)}
+//    }
 
 }

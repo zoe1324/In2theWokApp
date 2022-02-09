@@ -9,14 +9,17 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
+
     //Declaring an instance of FirebaseAuth
     private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
         supportActionBar?.hide()
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
+        auth.signOut()
         val loginBtnMain = findViewById<Button>(R.id.btnLoginMain)
         val registerBtnMain = findViewById<Button>(R.id.btnRegisterMain)
 

@@ -114,33 +114,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/q5"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/q4"
             app:layout_constraintTop_toBottomOf="@id/q4" />
-
-        <TextView
-            android:id="@+id/q5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="35sp"
-            android:paddingBottom="10sp"
-            android:text="q5"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/a5"
-            app:layout_constraintStart_toStartOf="@id/a4"
-            app:layout_constraintTop_toBottomOf="@id/a4" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/a5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/q5"
-            app:layout_constraintTop_toBottomOf="@id/q5" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

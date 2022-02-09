@@ -73,6 +73,7 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun switchToGetStarted() {
         Intent(this, GetStartedActivity::class.java).also {
             startActivity(it)
