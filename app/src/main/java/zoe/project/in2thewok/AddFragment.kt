@@ -26,6 +26,7 @@ import zoe.project.in2thewok.databinding.FragmentAddBinding
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 lateinit var auth: FirebaseAuth
+//Users could hold a collection of post ids only, that match up to an id that is in a separate posts collection
 
 /**
  * A simple [Fragment] subclass.
@@ -38,8 +39,8 @@ class AddFragment : Fragment() {
 //    private var param2: String? = null
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
-    private val personCollectionRef = Firebase.firestore.collection("persons")
-    private val home = activity
+//    private val personCollectionRef = Firebase.firestore.collection("people")
+    private val postCollectionRef = Firebase.firestore.collection("posts")
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -63,54 +64,70 @@ class AddFragment : Fragment() {
         auth = Firebase.auth
         val db = Firebase.firestore
         binding.btnUploadData.setOnClickListener{
-            val firstName = binding.etFirstName.text.toString()
-            val lastName = binding.etLastName.text.toString()
-            val age = binding.etAge.text.toString().toInt()
-            val person = Person(firstName, lastName, age)
-            savePerson(person)
+            val caption = binding.caption.text.toString()
+            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(), caption)
+            addPost(post)
+//            val posterID = personCollectionRef.whereEqualTo("userID", auth.currentUser?.uid)
+//            for(document in posterID.d){
+//
+//            }
+//            val posterRef = Firebase.firestore.collection("people").document(posterID).collection("posts")
+//            posterRef.add(post)
         }
+//        binding.btnUploadData.setOnClickListener{
+//            val firstName = binding.etFirstName.text.toString()
+//            val lastName = binding.etLastName.text.toString()
+//            val age = binding.etAge.text.toString().toInt()
+//            val person = Person(firstName, lastName, age)
+//            savePerson(person)
+//        }
 
-        binding.btnRetrieveData.setOnClickListener{
-            retrievePersons()
-        }
+//        binding.btnRetrieveData.setOnClickListener{
+//            retrievePersons()
+//        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    private fun retrievePersons() = CoroutineScope(Dispatchers.IO).launch{
-        try{
-            val querySnapshot = personCollectionRef.get().await()
-            val sb = StringBuilder()
-            for(document in querySnapshot.documents){
-                val person = document.toObject<Person>()
-                sb.append("$person\n") //append person followed by new line
-            }
-            // set string $ text to textview,
-            // so switch the co-routine context as UI can only be modified inside Main dispatchers
-            withContext(Dispatchers.Main){
-                val tvPersons = binding.tvPersons
-                tvPersons.text = sb.toString()
-            }
-        } catch (e: Exception){
-            withContext(Dispatchers.Main){
-                Toast.makeText(home, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-    private fun savePerson(person: Person) = CoroutineScope(Dispatchers.IO).launch{
+
+//    private fun retrievePersons() = CoroutineScope(Dispatchers.IO).launch{
+//        try{
+//            val querySnapshot = personCollectionRef.get().await()
+//            val sb = StringBuilder()
+//            for(document in querySnapshot.documents){
+//                val person = document.toObject<Person>()
+//                sb.append("$person\n") //append person followed by new line
+//            }
+//            // set string $ text to textview,
+//            // so switch the co-routine context as UI can only be modified inside Main dispatchers
+//            withContext(Dispatchers.Main){
+//                val tvPersons = binding.tvPersons
+//                tvPersons.text = sb.toString()
+//            }
+//        } catch (e: Exception){
+//            withContext(Dispatchers.Main){
+//                Toast.makeText(home, e.message, Toast.LENGTH_LONG).show()
+//            }
+//        }
+//    }
+    private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
+    val context = context?.applicationContext
         try {
-            personCollectionRef.add(person).await()
-            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                Toast.makeText(home, "Successfully saved data.", Toast.LENGTH_LONG).show()
-            }
-        } catch(e: Exception){
-            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                Toast.makeText(home, e.message, Toast.LENGTH_LONG).show()
+        //            personCollectionRef.add(person).await()
+        //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()
+                postCollectionRef.add(post).await()
+                binding.caption.editableText.clear()
+                withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+                    Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
+                }
+            } catch(e: Exception){
+                withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                }
             }
         }
-    }
 
 //    companion object {
 //        /**
