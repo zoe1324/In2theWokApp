@@ -1,30 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/holo_blue_light"
-    tools:context=".ProfileFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@android:color/holo_blue_light">
 
-        <ScrollView
-            android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        tools:context=".ProfileFragment">
+
+        <TextView
+            android:id="@+id/tvFavouriteTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Favourites:"
+            android:textSize="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvQ1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cooking smell:"
+            android:textSize="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/tvFavouriteTitle"
+            app:layout_constraintBottom_toTopOf="@id/tvA1"/>
 
-            <TextView
-                android:id="@+id/tvPosts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="POST DATA"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+        <TextView
+            android:id="@+id/tvA1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text=""
+            app:layout_constraintStart_toStartOf="@id/tvQ1"
+            app:layout_constraintEnd_toEndOf="@id/tvQ1"
+            app:layout_constraintTop_toBottomOf="@id/tvQ1"
+            app:layout_constraintBottom_toTopOf="@id/tvQ2"/>
 
-        </ScrollView>
+        <TextView
+            android:id="@+id/tvQ2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fruit:"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="@id/tvA1"
+            app:layout_constraintStart_toStartOf="@id/tvA1"
+            app:layout_constraintTop_toBottomOf="@id/tvA1"
+            app:layout_constraintBottom_toTopOf="@id/tvA2"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvA2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text=""
+            app:layout_constraintStart_toStartOf="@id/tvQ2"
+            app:layout_constraintEnd_toEndOf="@id/tvQ2"
+            app:layout_constraintTop_toBottomOf="@id/tvQ2"
+            app:layout_constraintBottom_toTopOf="@id/tvQ3"/>
+
+        <TextView
+            android:id="@+id/tvQ3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegetable:"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="@id/tvA2"
+            app:layout_constraintStart_toStartOf="@id/tvA2"
+            app:layout_constraintTop_toBottomOf="@id/tvA2"
+            app:layout_constraintBottom_toTopOf="@id/tvA3"/>
+
+        <TextView
+            android:id="@+id/tvA3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="@id/tvQ3"
+            app:layout_constraintEnd_toEndOf="@id/tvQ3"
+            app:layout_constraintTop_toBottomOf="@id/tvQ3"
+            app:layout_constraintBottom_toTopOf="@id/tvQ4"/>
+
+        <TextView
+            android:id="@+id/tvQ4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type of cuisine:"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="@id/tvA3"
+            app:layout_constraintStart_toStartOf="@id/tvA3"
+            app:layout_constraintTop_toBottomOf="@id/tvA3"
+            app:layout_constraintBottom_toTopOf="@id/tvA4"/>
+
+        <TextView
+            android:id="@+id/tvA4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="@id/tvQ4"
+            app:layout_constraintEnd_toEndOf="@id/tvQ4"
+            app:layout_constraintTop_toBottomOf="@id/tvQ4"
+            app:layout_constraintBottom_toTopOf="@id/tvPosts"/>
+
+        <TextView
+            android:id="@+id/tvPosts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="POST DATA"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/tvA4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+
+
+
+

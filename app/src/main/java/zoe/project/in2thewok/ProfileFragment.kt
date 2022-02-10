@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -53,6 +54,7 @@ class ProfileFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         auth = Firebase.auth
+        setQuestionAnswers()
         retrievePosts()
     }
 
@@ -64,6 +66,35 @@ class ProfileFragment : Fragment() {
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch{
 
         try{
+            val querySnapshot = postCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid)
+                .get()
+                .await()
+            val sb = StringBuilder()
+            for(document in querySnapshot.documents){
+                val post = document.toObject<Post>()
+                sb.append("$post\n") //append person followed by new line
+            }
+            // set string $ text to textview,
+            // so switch the co-routine context as UI can only be modified inside Main dispatchers
+            withContext(Dispatchers.Main){
+                val tvPosts = binding.tvPosts
+                tvPosts.text = sb.toString()
+            }
+        } catch (e: Exception){
+            val context = context?.applicationContext
+            withContext(Dispatchers.Main){
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+    //Add functionality for the TextViews to change to users answers
+    private fun setQuestionAnswers() = CoroutineScope(Dispatchers.IO).launch{
+        try{
+            val tvA1 = binding.tvA1
+            val tvA2 = binding.tvA2
+            val tvA3 = binding.tvA3
+            val tvA4 = binding.tvA4
             val querySnapshot = postCollectionRef
                 .whereEqualTo("userID", auth.currentUser?.uid)
                 .get()
