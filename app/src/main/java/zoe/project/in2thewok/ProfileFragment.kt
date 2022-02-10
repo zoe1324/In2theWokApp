@@ -35,6 +35,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
+    private val personCollectionRef = Firebase.firestore.collection("people")
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -95,20 +96,30 @@ class ProfileFragment : Fragment() {
             val tvA2 = binding.tvA2
             val tvA3 = binding.tvA3
             val tvA4 = binding.tvA4
-            val querySnapshot = postCollectionRef
+            val querySnapshot = personCollectionRef
                 .whereEqualTo("userID", auth.currentUser?.uid)
                 .get()
                 .await()
-            val sb = StringBuilder()
+            val a1 = StringBuilder()
+            val a2 = StringBuilder()
+            val a3 = StringBuilder()
+            val a4 = StringBuilder()
             for(document in querySnapshot.documents){
-                val post = document.toObject<Post>()
-                sb.append("$post\n") //append person followed by new line
+                val person = document.toObject<Person>()
+                a1.append(person?.q1)
+                a2.append(person?.q2)
+                a3.append(person?.q3)
+                a4.append(person?.q4)
+//                sb.append("$person\n") //append person followed by new line
             }
             // set string $ text to textview,
             // so switch the co-routine context as UI can only be modified inside Main dispatchers
             withContext(Dispatchers.Main){
-                val tvPosts = binding.tvPosts
-                tvPosts.text = sb.toString()
+                tvA1.text = a1.toString()
+                tvA2.text = a2.toString()
+                tvA3.text = a3.toString()
+                tvA4.text = a4.toString()
+//                tvPosts.text = sb.toString()
             }
         } catch (e: Exception){
             val context = context?.applicationContext

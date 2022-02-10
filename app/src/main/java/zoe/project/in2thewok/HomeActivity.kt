@@ -70,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
         super.onStart()
         supportActionBar?.title = "Home"
         supportActionBar?.title = "Hello " + Firebase.auth.currentUser?.displayName
-        supportActionBar?.show()
+        supportActionBar?.hide()
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
     }
