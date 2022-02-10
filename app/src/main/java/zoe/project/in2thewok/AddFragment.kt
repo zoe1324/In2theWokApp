@@ -1,7 +1,11 @@
 package zoe.project.in2thewok
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
+import java.net.URI
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,6 +42,7 @@ class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
 //    private var param1: String? = null
 //    private var param2: String? = null
+    private var imageUri : Uri? = null
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 //    private val personCollectionRef = Firebase.firestore.collection("people")
@@ -63,9 +69,11 @@ class AddFragment : Fragment() {
         super.onStart()
         auth = Firebase.auth
         val db = Firebase.firestore
+
+
         binding.btnUploadData.setOnClickListener{
             val caption = binding.caption.text.toString()
-            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(), caption)
+            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),imageUri, caption)
             addPost(post)
 //            val posterID = personCollectionRef.whereEqualTo("userID", auth.currentUser?.uid)
 //            for(document in posterID.d){
@@ -73,6 +81,10 @@ class AddFragment : Fragment() {
 //            }
 //            val posterRef = Firebase.firestore.collection("people").document(posterID).collection("posts")
 //            posterRef.add(post)
+        }
+        binding.btnUploadPhoto.setOnClickListener {
+            selectImage()
+            binding.imgUpload.setImageURI(imageUri)
         }
 //        binding.btnUploadData.setOnClickListener{
 //            val firstName = binding.etFirstName.text.toString()
@@ -85,6 +97,23 @@ class AddFragment : Fragment() {
 //        binding.btnRetrieveData.setOnClickListener{
 //            retrievePersons()
 //        }
+    }
+
+    private fun selectImage() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent, 100)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == 100 && resultCode == RESULT_OK){
+            imageUri = data?.data!!
+
+        }
+
     }
 
     override fun onDestroyView() {
