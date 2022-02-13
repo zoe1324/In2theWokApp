@@ -1,22 +1,18 @@
 package zoe.project.in2thewok
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
-import java.net.URI
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,7 +68,7 @@ class AddFragment : Fragment() {
 
         binding.btnUploadData.setOnClickListener{
             val caption = binding.caption.text.toString()
-            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),imageUri, caption)
+            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),imageUri?.toString(), caption)
             addPost(post)
 //            val posterID = personCollectionRef.whereEqualTo("userID", auth.currentUser?.uid)
 //            for(document in posterID.d){
@@ -84,7 +79,7 @@ class AddFragment : Fragment() {
         }
         binding.btnUploadPhoto.setOnClickListener {
             selectImage()
-            binding.imgUpload.setImageURI(imageUri)
+
         }
 //        binding.btnUploadData.setOnClickListener{
 //            val firstName = binding.etFirstName.text.toString()
@@ -103,24 +98,49 @@ class AddFragment : Fragment() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(intent, 100)
+        getResult.launch(intent)
+//        startActivityForResult(intent, 100)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == 100 && resultCode == RESULT_OK){
-            imageUri = data?.data!!
-
+    private val getResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == RESULT_OK){
+            imageUri = it.data?.data!!
+            binding.imgUpload.setImageURI(imageUri)
         }
-
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if(requestCode == 100 && resultCode == RESULT_OK){
+//            imageUri = data?.data!!
+//
+//        }
+//
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+    private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
+        val context = context?.applicationContext
+        try {
+            //            personCollectionRef.add(person).await()
+            //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()
+            postCollectionRef.add(post).await()
 
+            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+                Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
+                binding.caption.editableText.clear()
+            }
+        } catch(e: Exception){
+            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 //    private fun retrievePersons() = CoroutineScope(Dispatchers.IO).launch{
 //        try{
 //            val querySnapshot = personCollectionRef.get().await()
@@ -141,22 +161,7 @@ class AddFragment : Fragment() {
 //            }
 //        }
 //    }
-    private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
-        val context = context?.applicationContext
-        try {
-        //            personCollectionRef.add(person).await()
-        //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()
-                postCollectionRef.add(post).await()
-                binding.caption.editableText.clear()
-                withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                    Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
-                }
-            } catch(e: Exception){
-                withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
+
 
 //    companion object {
 //        /**

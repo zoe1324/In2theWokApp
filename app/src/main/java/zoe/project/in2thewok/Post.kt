@@ -4,10 +4,10 @@ import android.net.Uri
 import android.provider.MediaStore
 import java.net.URI
 
-data class Post (
+data class Post(
     var userID: String = "",
     var username: String = "",
-    var imageURI: Uri? = null,
+    var imageURI: String? = "",
 //    var video: MediaStore.Video,
-    var caption: String = ""
+    var caption: String? = ""
 )
