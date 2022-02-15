@@ -8,6 +8,7 @@
     android:background="@color/okabe_ito_vermilion_light_variant">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".ProfileFragment">
@@ -156,6 +157,7 @@
             android:textSize="20sp"
             app:layout_constraintTop_toBottomOf="@id/tvA4"
             app:layout_constraintStart_toStartOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

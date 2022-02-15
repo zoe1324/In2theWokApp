@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,11 +39,14 @@ class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
 //    private var param1: String? = null
 //    private var param2: String? = null
+    private lateinit var auth: FirebaseAuth
     private var imageUri : Uri? = null
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 //    private val personCollectionRef = Firebase.firestore.collection("people")
     private val postCollectionRef = Firebase.firestore.collection("posts")
+    private var storageRef = FirebaseStorage.getInstance().reference
+    private var remoteUri: String? = null
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -68,7 +73,7 @@ class AddFragment : Fragment() {
 
         binding.btnUploadData.setOnClickListener{
             val caption = binding.caption.text.toString()
-            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),imageUri?.toString(), caption)
+            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),remoteUri?.toString(), caption)
             addPost(post)
 //            val posterID = personCollectionRef.whereEqualTo("userID", auth.currentUser?.uid)
 //            for(document in posterID.d){
@@ -95,30 +100,33 @@ class AddFragment : Fragment() {
     }
 
     private fun selectImage() {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        getResult.launch(intent)
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            getResult.launch(intent)
 //        startActivityForResult(intent, 100)
-    }
+        }
 
     private val getResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == RESULT_OK){
-            imageUri = it.data?.data!!
-            binding.imgUpload.setImageURI(imageUri)
-        }
-    }
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+            if(it.resultCode == RESULT_OK){
+                imageUri = it.data?.data!!
+                var user = auth.currentUser
+                val imageRef = storageRef.child("images/" + user?.uid + "/" + imageUri!!.lastPathSegment)
+                val upload = imageRef.putFile(imageUri!!)
+//                remoteUri = downloadUrl.toString()
+                upload.addOnSuccessListener {
+                    val downloadUrl = imageRef.downloadUrl
+                    downloadUrl.addOnSuccessListener {
+                        remoteUri = it.toString()
+                    }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if(requestCode == 100 && resultCode == RESULT_OK){
-//            imageUri = data?.data!!
-//
-//        }
-//
-//    }
+                }
+                binding.imgUpload.setImageURI(imageUri)
+            }
+        }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

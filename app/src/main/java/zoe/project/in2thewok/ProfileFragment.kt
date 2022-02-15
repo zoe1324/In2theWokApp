@@ -1,16 +1,24 @@
 package zoe.project.in2thewok
 
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.net.toUri
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -36,6 +44,8 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private val personCollectionRef = Firebase.firestore.collection("people")
+    private val db = FirebaseFirestore.getInstance()
+    private val docRef: DocumentReference? = null
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -64,31 +74,6 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
-    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch{
-
-        try{
-            val querySnapshot = postCollectionRef
-                .whereEqualTo("userID", auth.currentUser?.uid)
-                .get()
-                .await()
-            val sb = StringBuilder()
-            for(document in querySnapshot.documents){
-                val post = document.toObject<Post>()
-                sb.append("$post\n") //append person followed by new line
-            }
-            // set string $ text to textview,
-            // so switch the co-routine context as UI can only be modified inside Main dispatchers
-            withContext(Dispatchers.Main){
-                val tvPosts = binding.tvPosts
-                tvPosts.text = sb.toString()
-            }
-        } catch (e: Exception){
-            val context = context?.applicationContext
-            withContext(Dispatchers.Main){
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
     //Add functionality for the TextViews to change to users answers
     private fun setQuestionAnswers() = CoroutineScope(Dispatchers.IO).launch{
         try{
@@ -128,6 +113,50 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch{
+
+        try{
+//            reference =
+            val querySnapshot = postCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid)
+                .get()
+                .await()
+////            val sb = StringBuilder()
+            for(document in querySnapshot.documents){
+                val post = document.toObject<Post>()
+                val caption = (post?.caption)
+                val imageURI = (post?.imageURI)?.toUri()
+////                sb.append("$caption\n") //append person followed by new line
+////                iv.setImageURI(imageURI)
+                withContext(Dispatchers.Main){
+//                    val iv = ImageView(context?.applicationContext)
+//                    binding.clProfile.addView(iv)
+//                    iv.layoutParams.height = 500
+//                    iv.layoutParams.width = 500
+//                    iv.x = 500F
+//                    iv.y = 500F
+//                    iv.
+//                    val localUri
+//                    val testImage = binding.testImage
+//                    testImage.setImageURI(imageURI)
+//                    binding.testImage.setImageURI(imageURI)
+                //                    setBackgroundColor(Color.CYAN)
+
+//                tvPosts.text = sb.toString()
+                }
+            }
+//
+//             set string $ text to textview,
+//             so switch the co-routine context as UI can only be modified inside Main dispatchers
+
+        } catch (e: Exception){
+            val context = context?.applicationContext
+            withContext(Dispatchers.Main){
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 //    companion object {
 //        /**
 //         * Use this factory method to create a new instance of
