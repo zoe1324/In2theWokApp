@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
+import java.net.URLEncoder.encode
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -112,7 +114,10 @@ class AddFragment : Fragment() {
             if(it.resultCode == RESULT_OK){
                 imageUri = it.data?.data!!
                 var user = auth.currentUser
-                val imageRef = storageRef.child("images/" + user?.uid + "/" + imageUri!!.lastPathSegment)
+                val re = Regex("[^A-Za-z0-9 ]")
+                var uriLastSeg = imageUri!!.lastPathSegment
+                uriLastSeg = uriLastSeg?.let { it1 -> re.replace(it1, "") }
+                val imageRef = storageRef.child("images/" + user?.uid + "/" + uriLastSeg)
                 val upload = imageRef.putFile(imageUri!!)
 //                remoteUri = downloadUrl.toString()
                 upload.addOnSuccessListener {

@@ -1,5 +1,6 @@
 package zoe.project.in2thewok
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -19,11 +20,17 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.rpc.context.AttributeContext
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentProfileBinding
+import java.io.File
+import java.lang.Byte.decode
+import java.net.URLDecoder
+import java.net.URLEncoder.encode
 import kotlinx.coroutines.Dispatchers as Dispatchers
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,7 +51,6 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private val personCollectionRef = Firebase.firestore.collection("people")
-    private val db = FirebaseFirestore.getInstance()
     private val docRef: DocumentReference? = null
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
@@ -113,42 +119,31 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch{
+    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
 
-        try{
+        try {
 //            reference =
-            val querySnapshot = postCollectionRef
-                .whereEqualTo("userID", auth.currentUser?.uid)
-                .get()
-                .await()
+//            val querySnapshot = postCollectionRef
+//                .whereEqualTo("userID", auth.currentUser?.uid)
+//                .get()
+//                .await()
 ////            val sb = StringBuilder()
-            for(document in querySnapshot.documents){
-                val post = document.toObject<Post>()
-                val caption = (post?.caption)
-                val imageURI = (post?.imageURI)?.toUri()
-////                sb.append("$caption\n") //append person followed by new line
-////                iv.setImageURI(imageURI)
-                withContext(Dispatchers.Main){
-//                    val iv = ImageView(context?.applicationContext)
-//                    binding.clProfile.addView(iv)
-//                    iv.layoutParams.height = 500
-//                    iv.layoutParams.width = 500
-//                    iv.x = 500F
-//                    iv.y = 500F
-//                    iv.
-//                    val localUri
-//                    val testImage = binding.testImage
-//                    testImage.setImageURI(imageURI)
-//                    binding.testImage.setImageURI(imageURI)
-                //                    setBackgroundColor(Color.CYAN)
-
-//                tvPosts.text = sb.toString()
-                }
+//            for(document in querySnapshot.documents){
+//                val post = document.toObject<Post>()
+//                val caption = (post?.caption)
+//                val imageURI = (post?.imageURI)?.toUri()
+//                sb.append("$caption\n") //append person followed by new line
+//                iv.setImageURI(imageURI)
+            withContext(Dispatchers.Main) {
+                val iv = ImageView(context?.applicationContext)
+                val imagePath = auth.currentUser?.uid
+                binding.clProfile.addView(iv)
+                iv.layoutParams.height = 500
+                iv.layoutParams.width = 500
+                iv.x = 500F
+                iv.y = 500F
+                Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/in2thewok.appspot.com/o/images%2FV5Jhkt4jPANYZWFpnQGA6QmCcV23%2Fimage61?alt=media&token=b32a1cc9-a5ec-4bef-8a7c-718ab07aa66f").into(iv)
             }
-//
-//             set string $ text to textview,
-//             so switch the co-routine context as UI can only be modified inside Main dispatchers
-
         } catch (e: Exception){
             val context = context?.applicationContext
             withContext(Dispatchers.Main){
@@ -156,6 +151,32 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+                //                    val encodedFileName = URLDecoder.decode("image%3A61.jpeg", "UTF-8")
+//                    val storageRef = FirebaseStorage.getInstance().reference.child("images/V5Jhkt4jPANYZWFpnQGA6QmCcV23/image61")
+//                    iv.setBackgroundColor(Color.CYAN)
+//                    iv.
+//                    val localUri
+//                    val testImage = binding.testImage
+//                    iv.setImageBitmap(imageURI)
+//                    val localFile = File.createTempFile("tempImage", "jpg")
+//                    storageRef.getFile(localFile).addOnSuccessListener{
+//                        val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+//                        iv.setImageBitmap(bitmap)
+//                    }.addOnFailureListener{
+//                        Toast.makeText(context?.applicationContext, it.message, Toast.LENGTH_LONG).show()
+//                    }
+//                    binding.testImage.setImageURI(imageURI)
+                //
+
+//                tvPosts.text = sb.toString()
+//                }
+//            }
+//
+//             set string $ text to textview,
+//             so switch the co-routine context as UI can only be modified inside Main dispatchers
+
+//        }
+//    }
 
 //    companion object {
 //        /**
