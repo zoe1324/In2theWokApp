@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.net.toUri
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
@@ -51,7 +53,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private val personCollectionRef = Firebase.firestore.collection("people")
-    private val docRef: DocumentReference? = null
+//    private val docRef: DocumentReference? = null
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        arguments?.let {
@@ -123,26 +125,42 @@ class ProfileFragment : Fragment() {
 
         try {
 //            reference =
-//            val querySnapshot = postCollectionRef
-//                .whereEqualTo("userID", auth.currentUser?.uid)
-//                .get()
-//                .await()
-////            val sb = StringBuilder()
-//            for(document in querySnapshot.documents){
-//                val post = document.toObject<Post>()
-//                val caption = (post?.caption)
-//                val imageURI = (post?.imageURI)?.toUri()
-//                sb.append("$caption\n") //append person followed by new line
-//                iv.setImageURI(imageURI)
-            withContext(Dispatchers.Main) {
-                val iv = ImageView(context?.applicationContext)
-                val imagePath = auth.currentUser?.uid
-                binding.clProfile.addView(iv)
-                iv.layoutParams.height = 500
-                iv.layoutParams.width = 500
-                iv.x = 500F
-                iv.y = 500F
-                Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/in2thewok.appspot.com/o/images%2FV5Jhkt4jPANYZWFpnQGA6QmCcV23%2Fimage61?alt=media&token=b32a1cc9-a5ec-4bef-8a7c-718ab07aa66f").into(iv)
+            val querySnapshot = postCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid)
+                .get()
+                .await()
+            for(document in querySnapshot.documents){
+                var post = document.toObject<Post>()
+                var caption = (post?.caption)
+                var imageURI = (post?.imageURI)
+                withContext(Dispatchers.Main) {
+//                    val set = ConstraintSet()
+//                    val constraintLayout = binding.clProfile
+//                    set.clone(constraintLayout)
+                    var iv = ImageView(context?.applicationContext)
+                    binding.clProfile.addView(iv)
+                    iv.id = View.generateViewId()
+                    Picasso.get()
+                        .load(imageURI)
+                        .into(iv)
+                    var current = binding.tvA4.id
+                    var params = iv.layoutParams as ConstraintLayout.LayoutParams
+                    params.startToStart = current
+                    params.endToEnd = current
+                    params.topToBottom = current
+                    iv.adjustViewBounds = true
+                    iv.maxHeight = 700
+                    iv.maxWidth = 700
+                    params.width = WRAP_CONTENT
+                    params.height = WRAP_CONTENT
+                    iv.requestLayout()
+//
+//                    set.connect(iv.id, set.TOP, current, set.BOTTOM, 0)
+//                    set.connect(iv.id, ConstraintSet.LEFT, binding.clProfile.id, ConstraintSet.LEFT, 0)
+//                    set.connect(iv.id, ConstraintSet.RIGHT, binding.clProfile.id, ConstraintSet.RIGHT, 0)
+//                    set.applyTo(constraintLayout)
+//                    current == iv.id
+                }
             }
         } catch (e: Exception){
             val context = context?.applicationContext
@@ -151,6 +169,30 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+//
+//                sb.append("$caption\n") //append person followed by new line
+
+
+//                    binding.clProfile.addView(iv)
+//                    iv.
+
+//                    iv.layoutParams.height = 500
+//                    iv.layoutParams.width = 500
+
+
+//                    iv.
+
+
+//                    changes the image size
+//                    iv.x = 600F
+//                    iv.y = 600F
+
+//                    Picasso.get()
+//                        .load("https://firebasestorage.googleapis.com/v0/b/in2thewok.appspot.com/o/images%2FV5Jhkt4jPANYZWFpnQGA6QmCcV23%2Fimage61?alt=media&token=b32a1cc9-a5ec-4bef-8a7c-718ab07aa66f")
+//                        .into(iv)
+//            }
+
+
                 //                    val encodedFileName = URLDecoder.decode("image%3A61.jpeg", "UTF-8")
 //                    val storageRef = FirebaseStorage.getInstance().reference.child("images/V5Jhkt4jPANYZWFpnQGA6QmCcV23/image61")
 //                    iv.setBackgroundColor(Color.CYAN)
