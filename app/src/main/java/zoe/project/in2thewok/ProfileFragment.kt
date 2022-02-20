@@ -144,7 +144,6 @@ class ProfileFragment : Fragment() {
                     binding.clProfile.addView(iv)
                     iv.id = idCount
                     idCount++
-
                     var params = iv.layoutParams as ConstraintLayout.LayoutParams
                     params.startToStart = current
                     params.endToEnd = current
@@ -155,17 +154,9 @@ class ProfileFragment : Fragment() {
                     params.width = WRAP_CONTENT
                     params.height = WRAP_CONTENT
                     iv.requestLayout()
-
                     Picasso.get()
                         .load(imageURI)
                         .into(iv)
-
-
-//
-//                    set.connect(iv.id, set.TOP, current, set.BOTTOM, 0)
-//                    set.connect(iv.id, ConstraintSet.LEFT, binding.clProfile.id, ConstraintSet.LEFT, 0)
-//                    set.connect(iv.id, ConstraintSet.RIGHT, binding.clProfile.id, ConstraintSet.RIGHT, 0)
-//                    set.applyTo(constraintLayout)
                     current = iv.id
                 }
             }
@@ -176,57 +167,6 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-//
-//                sb.append("$caption\n") //append person followed by new line
-
-
-//                    binding.clProfile.addView(iv)
-//                    iv.
-
-//                    iv.layoutParams.height = 500
-//                    iv.layoutParams.width = 500
-
-
-//                    iv.
-
-
-//                    changes the image size
-//                    iv.x = 600F
-//                    iv.y = 600F
-
-//                    Picasso.get()
-//                        .load("https://firebasestorage.googleapis.com/v0/b/in2thewok.appspot.com/o/images%2FV5Jhkt4jPANYZWFpnQGA6QmCcV23%2Fimage61?alt=media&token=b32a1cc9-a5ec-4bef-8a7c-718ab07aa66f")
-//                        .into(iv)
-//            }
-
-
-                //                    val encodedFileName = URLDecoder.decode("image%3A61.jpeg", "UTF-8")
-//                    val storageRef = FirebaseStorage.getInstance().reference.child("images/V5Jhkt4jPANYZWFpnQGA6QmCcV23/image61")
-//                    iv.setBackgroundColor(Color.CYAN)
-//                    iv.
-//                    val localUri
-//                    val testImage = binding.testImage
-//                    iv.setImageBitmap(imageURI)
-//                    val localFile = File.createTempFile("tempImage", "jpg")
-//                    storageRef.getFile(localFile).addOnSuccessListener{
-//                        val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
-//                        iv.setImageBitmap(bitmap)
-//                    }.addOnFailureListener{
-//                        Toast.makeText(context?.applicationContext, it.message, Toast.LENGTH_LONG).show()
-//                    }
-//                    binding.testImage.setImageURI(imageURI)
-                //
-
-//                tvPosts.text = sb.toString()
-//                }
-//            }
-//
-//             set string $ text to textview,
-//             so switch the co-routine context as UI can only be modified inside Main dispatchers
-
-//        }
-//    }
-
 //    companion object {
 //        /**
 //         * Use this factory method to create a new instance of

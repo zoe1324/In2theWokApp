@@ -77,28 +77,11 @@ class AddFragment : Fragment() {
             val caption = binding.caption.text.toString()
             val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),remoteUri?.toString(), caption)
             addPost(post)
-//            val posterID = personCollectionRef.whereEqualTo("userID", auth.currentUser?.uid)
-//            for(document in posterID.d){
-//
-//            }
-//            val posterRef = Firebase.firestore.collection("people").document(posterID).collection("posts")
-//            posterRef.add(post)
         }
         binding.btnUploadPhoto.setOnClickListener {
             selectImage()
 
         }
-//        binding.btnUploadData.setOnClickListener{
-//            val firstName = binding.etFirstName.text.toString()
-//            val lastName = binding.etLastName.text.toString()
-//            val age = binding.etAge.text.toString().toInt()
-//            val person = Person(firstName, lastName, age)
-//            savePerson(person)
-//        }
-
-//        binding.btnRetrieveData.setOnClickListener{
-//            retrievePersons()
-//        }
     }
 
     private fun selectImage() {
@@ -131,8 +114,6 @@ class AddFragment : Fragment() {
             }
         }
 
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -154,27 +135,6 @@ class AddFragment : Fragment() {
             }
         }
     }
-//    private fun retrievePersons() = CoroutineScope(Dispatchers.IO).launch{
-//        try{
-//            val querySnapshot = personCollectionRef.get().await()
-//            val sb = StringBuilder()
-//            for(document in querySnapshot.documents){
-//                val person = document.toObject<Person>()
-//                sb.append("$person\n") //append person followed by new line
-//            }
-//            // set string $ text to textview,
-//            // so switch the co-routine context as UI can only be modified inside Main dispatchers
-//            withContext(Dispatchers.Main){
-//                val tvPersons = binding.tvPersons
-//                tvPersons.text = sb.toString()
-//            }
-//        } catch (e: Exception){
-//            withContext(Dispatchers.Main){
-//                Toast.makeText(home, e.message, Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
-
 
 //    companion object {
 //        /**
