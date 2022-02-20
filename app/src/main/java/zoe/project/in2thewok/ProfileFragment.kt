@@ -129,6 +129,7 @@ class ProfileFragment : Fragment() {
                 .whereEqualTo("userID", auth.currentUser?.uid)
                 .get()
                 .await()
+            var idCount = 1
             for(document in querySnapshot.documents){
                 var post = document.toObject<Post>()
                 var caption = (post?.caption)
@@ -139,10 +140,8 @@ class ProfileFragment : Fragment() {
 //                    set.clone(constraintLayout)
                     var iv = ImageView(context?.applicationContext)
                     binding.clProfile.addView(iv)
-                    iv.id = View.generateViewId()
-                    Picasso.get()
-                        .load(imageURI)
-                        .into(iv)
+                    iv.id = idCount
+                    idCount++
                     var current = binding.tvA4.id
                     var params = iv.layoutParams as ConstraintLayout.LayoutParams
                     params.startToStart = current
@@ -153,13 +152,20 @@ class ProfileFragment : Fragment() {
                     iv.maxWidth = 700
                     params.width = WRAP_CONTENT
                     params.height = WRAP_CONTENT
+
                     iv.requestLayout()
+
+                    Picasso.get()
+                        .load(imageURI)
+                        .into(iv)
+
+
 //
 //                    set.connect(iv.id, set.TOP, current, set.BOTTOM, 0)
 //                    set.connect(iv.id, ConstraintSet.LEFT, binding.clProfile.id, ConstraintSet.LEFT, 0)
 //                    set.connect(iv.id, ConstraintSet.RIGHT, binding.clProfile.id, ConstraintSet.RIGHT, 0)
 //                    set.applyTo(constraintLayout)
-//                    current == iv.id
+                    current = iv.id
                 }
             }
         } catch (e: Exception){
