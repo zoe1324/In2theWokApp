@@ -130,10 +130,12 @@ class ProfileFragment : Fragment() {
                 .get()
                 .await()
             var idCount = 1
+            var current = binding.tvA4.id
             for(document in querySnapshot.documents){
                 var post = document.toObject<Post>()
                 var caption = (post?.caption)
                 var imageURI = (post?.imageURI)
+
                 withContext(Dispatchers.Main) {
 //                    val set = ConstraintSet()
 //                    val constraintLayout = binding.clProfile
@@ -142,7 +144,7 @@ class ProfileFragment : Fragment() {
                     binding.clProfile.addView(iv)
                     iv.id = idCount
                     idCount++
-                    var current = binding.tvA4.id
+
                     var params = iv.layoutParams as ConstraintLayout.LayoutParams
                     params.startToStart = current
                     params.endToEnd = current
@@ -152,7 +154,6 @@ class ProfileFragment : Fragment() {
                     iv.maxWidth = 700
                     params.width = WRAP_CONTENT
                     params.height = WRAP_CONTENT
-
                     iv.requestLayout()
 
                     Picasso.get()
