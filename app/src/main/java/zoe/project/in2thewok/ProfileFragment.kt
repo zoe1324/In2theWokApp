@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.net.toUri
+import androidx.core.view.setPadding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -153,6 +154,7 @@ class ProfileFragment : Fragment() {
                     iv.maxWidth = 700
                     params.width = WRAP_CONTENT
                     params.height = WRAP_CONTENT
+                    iv.setPadding(100, 100,100, 50)
                     iv.requestLayout()
                     Picasso.get()
                         .load(imageURI)

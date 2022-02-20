@@ -38,8 +38,6 @@
                 android:textSize="30sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-
         </LinearLayout>
 
         <TextView
@@ -66,7 +64,7 @@
             android:padding="10dp"
             android:fontFamily="@font/roboto_light"
             android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="@id/tvA1"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvA1"
             app:layout_constraintBottom_toTopOf="@id/tvA2"/>
 
@@ -81,7 +79,8 @@
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="@id/tvQ1"
             app:layout_constraintTop_toBottomOf="@id/tvQ1"
-            app:layout_constraintBottom_toTopOf="@id/tvQ2"/>
+            app:layout_constraintBottom_toTopOf="@id/tvQ2"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/tvA2"
@@ -94,7 +93,8 @@
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="@id/tvQ2"
             app:layout_constraintTop_toBottomOf="@id/tvQ2"
-            app:layout_constraintBottom_toTopOf="@id/tvQ3"/>
+            app:layout_constraintBottom_toTopOf="@id/tvQ3"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/tvQ3"
@@ -105,7 +105,7 @@
             android:fontFamily="@font/roboto_light"
             android:textColor="@color/black"
             android:padding="10dp"
-            app:layout_constraintStart_toStartOf="@id/tvA2"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvA2"
             app:layout_constraintBottom_toTopOf="@id/tvA3"/>
 
@@ -118,7 +118,7 @@
             android:fontFamily="@font/roboto_light"
             android:textColor="@color/black"
             android:padding="10dp"
-            app:layout_constraintStart_toStartOf="@id/tvA3"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvA3"
             app:layout_constraintBottom_toTopOf="@id/tvA4"
             />
@@ -135,6 +135,7 @@
             app:layout_constraintStart_toStartOf="@id/tvQ3"
             app:layout_constraintTop_toBottomOf="@id/tvQ3"
             app:layout_constraintBottom_toTopOf="@id/tvQ4"
+            app:layout_constraintEnd_toEndOf="parent"
             />
 
         <TextView
