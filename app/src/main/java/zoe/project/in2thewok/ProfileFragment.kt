@@ -1,10 +1,6 @@
 package zoe.project.in2thewok
 
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,28 +9,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.net.toUri
-import androidx.core.view.setPadding
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.rpc.context.AttributeContext
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentProfileBinding
-import java.io.File
-import java.lang.Byte.decode
-import java.net.URLDecoder
-import java.net.URLEncoder.encode
-import kotlinx.coroutines.Dispatchers as Dispatchers
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,6 +57,7 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onStart() {
         super.onStart()
         auth = Firebase.auth
@@ -84,8 +71,8 @@ class ProfileFragment : Fragment() {
     }
 
     //Add functionality for the TextViews to change to users answers
-    private fun setQuestionAnswers() = CoroutineScope(Dispatchers.IO).launch{
-        try{
+    private fun setQuestionAnswers() = CoroutineScope(Dispatchers.IO).launch {
+        try {
             val tvA1 = binding.tvA1
             val tvA2 = binding.tvA2
             val tvA3 = binding.tvA3
@@ -98,7 +85,7 @@ class ProfileFragment : Fragment() {
             val a2 = StringBuilder()
             val a3 = StringBuilder()
             val a4 = StringBuilder()
-            for(document in querySnapshot.documents){
+            for (document in querySnapshot.documents) {
                 val person = document.toObject<Person>()
                 a1.append(person?.q1)
                 a2.append(person?.q2)
@@ -108,20 +95,21 @@ class ProfileFragment : Fragment() {
             }
             // set string $ text to textview,
             // so switch the co-routine context as UI can only be modified inside Main dispatchers
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 tvA1.text = a1.toString()
                 tvA2.text = a2.toString()
                 tvA3.text = a3.toString()
                 tvA4.text = a4.toString()
 //                tvPosts.text = sb.toString()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             val context = context?.applicationContext
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }
     }
+
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
 
         try {
@@ -132,39 +120,56 @@ class ProfileFragment : Fragment() {
                 .await()
             var idCount = 1
             var current = binding.tvA4.id
-            for(document in querySnapshot.documents){
-                var post = document.toObject<Post>()
-                var caption = (post?.caption)
-                var imageURI = (post?.imageURI)
+            var post: Post?
+            var caption: String?
+            var imageURI: String?
+            for (document in querySnapshot.documents) {
+
+                post = document.toObject<Post>()
+                caption = (post?.caption)
+                imageURI = (post?.imageURI)
 
                 withContext(Dispatchers.Main) {
-//                    val set = ConstraintSet()
-//                    val constraintLayout = binding.clProfile
-//                    set.clone(constraintLayout)
-                    var iv = ImageView(context?.applicationContext)
+                    val iv = ImageView(context?.applicationContext)
+                    val tv = TextView(context?.applicationContext)
+                    binding.clProfile.addView(tv)
                     binding.clProfile.addView(iv)
+                    tv.text = caption
+                    tv.setPadding(50, 50, 50, 0)
+                    tv.id = idCount
+                    idCount++
                     iv.id = idCount
                     idCount++
-                    var params = iv.layoutParams as ConstraintLayout.LayoutParams
+                    val params = tv.layoutParams as ConstraintLayout.LayoutParams
                     params.startToStart = current
                     params.endToEnd = current
                     params.topToBottom = current
+                    tv.requestLayout()
+                    current = tv.id
+                    params.width = WRAP_CONTENT
+                    params.height = WRAP_CONTENT
+
                     iv.adjustViewBounds = true
                     iv.maxHeight = 700
                     iv.maxWidth = 700
-                    params.width = WRAP_CONTENT
-                    params.height = WRAP_CONTENT
-                    iv.setPadding(100, 100,100, 50)
+                    val ivParams = iv.layoutParams as ConstraintLayout.LayoutParams
+                    ivParams.startToStart = current
+                    ivParams.endToEnd = current
+                    ivParams.topToBottom = current
+                    ivParams.width = WRAP_CONTENT
+                    ivParams.height = WRAP_CONTENT
+                    iv.setPadding(100, 100, 100, 50)
                     iv.requestLayout()
+
                     Picasso.get()
                         .load(imageURI)
                         .into(iv)
                     current = iv.id
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             val context = context?.applicationContext
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }
