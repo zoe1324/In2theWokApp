@@ -126,7 +126,7 @@ class ProfileFragment : Fragment() {
             for (document in querySnapshot.documents) {
 
                 post = document.toObject<Post>()
-                caption = (post?.caption)
+                caption = (post?.title)
                 imageURI = (post?.imageURI)
 
                 withContext(Dispatchers.Main) {
