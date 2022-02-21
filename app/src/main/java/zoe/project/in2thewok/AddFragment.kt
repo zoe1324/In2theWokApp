@@ -75,7 +75,7 @@ class AddFragment : Fragment() {
 
         binding.btnUploadData.setOnClickListener{
             val caption = binding.caption.text.toString()
-            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),remoteUri?.toString(), caption)
+            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),remoteUri?.toString(), null, caption, listOf(), "", listOf(), "")
             addPost(post)
         }
         binding.btnUploadPhoto.setOnClickListener {
