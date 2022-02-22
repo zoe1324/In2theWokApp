@@ -75,10 +75,12 @@ class AddFragment : Fragment() {
             Picasso.get()
                 .load(imageUri)
                 .into(binding.imgUpload)
+            binding.imgUpload.visibility = VISIBLE
             binding.cvAddImg.visibility = INVISIBLE
-        }else {
-            binding.cvAddImg.visibility = VISIBLE
         }
+//        else {
+//            binding.cvAddImg.visibility = VISIBLE
+//        }
 //        CoroutineScope(Dispatchers.Main).launch{
 //            try {
 //                if (!remoteUri.equals(null)){
@@ -108,6 +110,8 @@ class AddFragment : Fragment() {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
+            binding.imgUpload.visibility = VISIBLE
+            binding.cvAddImg.visibility = INVISIBLE
             getResult.launch(intent)
 //        startActivityForResult(intent, 100)
         }
@@ -130,6 +134,7 @@ class AddFragment : Fragment() {
                 }
                 binding.imgUpload.setImageURI(imageUri)
                 binding.cvAddImg.visibility = INVISIBLE
+                binding.imgUpload.visibility = VISIBLE
             }
         }
 
@@ -148,6 +153,7 @@ class AddFragment : Fragment() {
                 Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
                 binding.recipeTitle.text.clear()
                 binding.imgUpload.setImageURI(null)
+                binding.imgUpload.visibility = INVISIBLE
                 imageUri = null
                 remoteUri = null
                 binding.cvAddImg.visibility = VISIBLE
