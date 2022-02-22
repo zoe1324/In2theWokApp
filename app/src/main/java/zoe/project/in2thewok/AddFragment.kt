@@ -108,7 +108,6 @@ class AddFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         auth = Firebase.auth
-        val db = Firebase.firestore
     }
 
     override fun onDestroyView() {
