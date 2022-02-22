@@ -45,10 +45,10 @@ class AddFragment : Fragment() {
     private var imageUri : Uri? = null
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
-//    private val personCollectionRef = Firebase.firestore.collection("people")
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private var storageRef = FirebaseStorage.getInstance().reference
     private var remoteUri: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -77,6 +77,7 @@ class AddFragment : Fragment() {
             addPost(post)
         }
 
+        // TODO: Check if regex is necessary here, also don't upload to Firebase before the post is done
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
                 uri: Uri? ->
             imageUri = uri
@@ -100,8 +101,6 @@ class AddFragment : Fragment() {
             getContent.launch("image/*")
         }
 
-
-
         return binding.root
 
     }
@@ -110,68 +109,14 @@ class AddFragment : Fragment() {
         super.onStart()
         auth = Firebase.auth
         val db = Firebase.firestore
-
-//        else {
-//            binding.cvAddImg.visibility = VISIBLE
-//        }
-//        CoroutineScope(Dispatchers.Main).launch{
-//            try {
-//                if (!remoteUri.equals(null)){
-//                    binding.cvAddImg.visibility = INVISIBLE
-//                    binding.imgUpload.visibility = VISIBLE
-//                    binding.imgUpload.setImageURI(imageUri)
-//                }
-//                    binding.imgUpload.visibility = INVISIBLE
-//                }
-//            } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(context?.applicationContext, e.message, Toast.LENGTH_LONG).show()
-//                }
-//            }
-//
-//        }
-
-
     }
-//    private fun selectImage() {
-//        val intent = Intent()
-//        intent.type = "image/*"
-//        intent.action = Intent.ACTION_GET_CONTENT
-//        getContent.launch("image/*")
-
-//            getResult.launch(intent)
-//        startActivityForResult(intent, 100)
-//        }
-    // TODO: Check if regex is necessary here, also don't upload to Firebase before the post is done
-//    private
-
-//    private val getResult =
-//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
-//            if(it.resultCode == RESULT_OK){
-//                imageUri = it.data?.data!!
-//                var user = auth.currentUser
-//                val re = Regex("[^A-Za-z0-9 ]")
-//                var uriLastSeg = imageUri!!.lastPathSegment
-//                uriLastSeg = uriLastSeg?.let { it1 -> re.replace(it1, "") }
-//                val imageRef = storageRef.child("images/" + user?.uid + "/" + uriLastSeg)
-//                val upload = imageRef.putFile(imageUri!!)
-//                upload.addOnSuccessListener {
-//                    val downloadUrl = imageRef.downloadUrl
-//                    downloadUrl.addOnSuccessListener {
-//                        remoteUri = it.toString()
-//                    }
-//                }
-//                binding.imgUpload.setImageURI(imageUri)
-//                binding.cvAddImg.visibility = INVISIBLE
-//                binding.imgUpload.visibility = VISIBLE
-//            }
-//        }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-    // TODO: don't make blank posts, setting the imageuri to null is enough to get rid of the iv
+
+    // TODO: don't make blank posts
     private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
         val context = context?.applicationContext
         try {
@@ -189,7 +134,6 @@ class AddFragment : Fragment() {
                 binding.imgUpload.visibility = INVISIBLE
                 imageUri = null
                 remoteUri = null
-//                binding.cvAddImg.visibility = VISIBLE
             }
         } catch(e: Exception){
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
