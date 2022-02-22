@@ -1,53 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".AddFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/okabe_ito_vermilion_light_variant">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/caption"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Type your post"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <Button
-        android:id="@+id/btnUploadPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Choose a photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/caption" />
+        tools:context=".AddFragment">
 
-    <ImageView
-        android:id="@+id/imgUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUploadData" />
+        <LinearLayout
+            android:id="@+id/llPostIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingBottom="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cvPostView">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_post_add_24"
+                android:layout_marginTop="30dp"/>
+
+            <TextView
+                android:id="@+id/tvNewPostTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_light"
+                android:paddingLeft="10dp"
+                android:paddingTop="20dp"
+                android:text="Make A New Post"
+                android:textColor="@color/okabe_ito_vermilion"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvPostView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llPostIcon"
+            app:cardCornerRadius="40sp"
+            android:elevation="500sp"
+            android:backgroundTint="@color/white">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clPostView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/recipeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="100"
+                    android:padding="25sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/clPostView"
+                    app:layout_constraintBottom_toTopOf="@id/cuisineType"
+                    android:hint="What is your special recipe called?"/>
+                <EditText
+                    android:id="@+id/cuisineType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="100"
+                    android:padding="25sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/recipeTitle"
+                    app:layout_constraintBottom_toTopOf="@id/recipeStory"
+                    android:hint="What kind of dish is your recipe? e.g. Italian, Mexican, Vegan etc."/>
+                <EditText
+                    android:id="@+id/recipeStory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="250sp"
+                    android:ems="100"
+                    android:padding="30sp"
+                    android:gravity="left"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cuisineType"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:hint="Why is this recipe special to you? What does it remind you of?"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAddImg"
+            android:layout_width="150sp"
+            android:layout_height="150sp"
+            app:cardCornerRadius="20sp"
+            android:backgroundTint="@color/white"
+            android:elevation="100sp"
+            app:layout_constraintBottom_toTopOf="@id/btnUploadData"
+            app:layout_constraintTop_toBottomOf="@id/cvPostView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:focusable="true">
+
+        <ImageView
+            android:id="@+id/btnUploadPhoto"
+            android:layout_width= "60dp"
+            android:layout_height="60dp"
+            android:text="Add a photo"
+            android:background="@drawable/ic_baseline_add_photo_alternate_24"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add A Photo"
+            android:layout_gravity="center_horizontal"
+            android:padding="10sp"
+            android:textSize="20sp"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/imgUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxWidth="200sp"
+            android:maxHeight="200sp"
+            app:layout_constraintBottom_toTopOf="@id/btnUploadData"
+            app:layout_constraintTop_toBottomOf="@id/cvPostView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <Button
             android:id="@+id/btnUploadData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Save to database"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnUploadPhoto" />
+            android:text="Post"
+            app:layout_constraintTop_toBottomOf="@id/cvAddImg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+</ScrollView>
     <!--    <EditText-->
     <!--        android:id="@+id/etFirstName"-->
     <!--        android:layout_width="wrap_content"-->

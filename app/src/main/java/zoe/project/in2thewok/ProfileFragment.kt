@@ -121,12 +121,12 @@ class ProfileFragment : Fragment() {
             var idCount = 1
             var current = binding.tvA4.id
             var post: Post?
-            var caption: String?
+            var postTitle: String?
             var imageURI: String?
             for (document in querySnapshot.documents) {
 
                 post = document.toObject<Post>()
-                caption = (post?.title)
+                postTitle = (post?.title)
                 imageURI = (post?.imageURI)
 
                 withContext(Dispatchers.Main) {
@@ -134,7 +134,7 @@ class ProfileFragment : Fragment() {
                     val tv = TextView(context?.applicationContext)
                     binding.clProfile.addView(tv)
                     binding.clProfile.addView(iv)
-                    tv.text = caption
+                    tv.text = postTitle
                     tv.setPadding(50, 50, 50, 0)
                     tv.id = idCount
                     idCount++
@@ -171,6 +171,7 @@ class ProfileFragment : Fragment() {
             val context = context?.applicationContext
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                println(e.message)
             }
         }
     }

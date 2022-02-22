@@ -4,11 +4,11 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils.replace
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,13 +17,13 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
-import java.net.URLEncoder.encode
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,19 +71,39 @@ class AddFragment : Fragment() {
         super.onStart()
         auth = Firebase.auth
         val db = Firebase.firestore
-
-
+        if (!remoteUri.equals(null)) {
+            Picasso.get()
+                .load(imageUri)
+                .into(binding.imgUpload)
+            binding.cvAddImg.visibility = INVISIBLE
+        }else {
+            binding.cvAddImg.visibility = VISIBLE
+        }
+//        CoroutineScope(Dispatchers.Main).launch{
+//            try {
+//                if (!remoteUri.equals(null)){
+//                    binding.cvAddImg.visibility = INVISIBLE
+//                    binding.imgUpload.visibility = VISIBLE
+//                    binding.imgUpload.setImageURI(imageUri)
+//                }
+//                    binding.imgUpload.visibility = INVISIBLE
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Toast.makeText(context?.applicationContext, e.message, Toast.LENGTH_LONG).show()
+//                }
+//            }
+//
+//        }
         binding.btnUploadData.setOnClickListener{
-            val caption = binding.caption.text.toString()
-            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),remoteUri?.toString(), null, caption, listOf(), "", listOf(), "")
+            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
+                remoteUri, null, binding.recipeTitle.text.toString(), listOf(), binding.cuisineType.text.toString(), listOf(), binding.recipeStory.text.toString())
             addPost(post)
         }
-        binding.btnUploadPhoto.setOnClickListener {
+        binding.cvAddImg.setOnClickListener {
             selectImage()
-
         }
     }
-
     private fun selectImage() {
             val intent = Intent()
             intent.type = "image/*"
@@ -91,7 +111,7 @@ class AddFragment : Fragment() {
             getResult.launch(intent)
 //        startActivityForResult(intent, 100)
         }
-
+// TODO: Check if regex is necessary here, also don't upload to Firebase before the post is done
     private val getResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
             if(it.resultCode == RESULT_OK){
@@ -102,15 +122,14 @@ class AddFragment : Fragment() {
                 uriLastSeg = uriLastSeg?.let { it1 -> re.replace(it1, "") }
                 val imageRef = storageRef.child("images/" + user?.uid + "/" + uriLastSeg)
                 val upload = imageRef.putFile(imageUri!!)
-//                remoteUri = downloadUrl.toString()
                 upload.addOnSuccessListener {
                     val downloadUrl = imageRef.downloadUrl
                     downloadUrl.addOnSuccessListener {
                         remoteUri = it.toString()
                     }
-
                 }
                 binding.imgUpload.setImageURI(imageUri)
+                binding.cvAddImg.visibility = INVISIBLE
             }
         }
 
@@ -127,7 +146,11 @@ class AddFragment : Fragment() {
 
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
                 Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
-                binding.caption.editableText.clear()
+                binding.recipeTitle.text.clear()
+                binding.imgUpload.setImageURI(null)
+                imageUri = null
+                remoteUri = null
+                binding.cvAddImg.visibility = VISIBLE
             }
         } catch(e: Exception){
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
