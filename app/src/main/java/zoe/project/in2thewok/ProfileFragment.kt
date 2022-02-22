@@ -170,7 +170,10 @@ class ProfileFragment : Fragment() {
         } catch (e: Exception) {
             val context = context?.applicationContext
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                if (context != null) {
+                    if(!(e.message.equals(null )))
+                        Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                }
                 println(e.message)
             }
         }
