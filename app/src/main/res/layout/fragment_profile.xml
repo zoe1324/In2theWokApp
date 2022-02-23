@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:background="@color/okabe_ito_vermilion_light_variant">
+    android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clProfile"
@@ -49,7 +48,6 @@
             android:layout_columnWeight="0"
             android:padding="10dp"
             android:fontFamily="@font/roboto_light"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="@id/llProfileIcon"
             app:layout_constraintTop_toBottomOf="@id/llProfileIcon"
             app:layout_constraintBottom_toTopOf="@id/tvA1"/>
@@ -62,7 +60,6 @@
             android:textSize="20sp"
             android:padding="10dp"
             android:fontFamily="@font/roboto_light"
-            android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvA1"
             app:layout_constraintBottom_toTopOf="@id/tvA2"/>
@@ -102,7 +99,6 @@
             android:text="Your favourite vegetable:"
             android:textSize="20sp"
             android:fontFamily="@font/roboto_light"
-            android:textColor="@color/black"
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvA2"
@@ -115,7 +111,6 @@
             android:text="Your favourite cuisine:"
             android:textSize="20sp"
             android:fontFamily="@font/roboto_light"
-            android:textColor="@color/black"
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvA3"

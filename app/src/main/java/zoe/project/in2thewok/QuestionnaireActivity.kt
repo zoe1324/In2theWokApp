@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
@@ -30,10 +31,10 @@ class QuestionnaireActivity : AppCompatActivity() {
         val submitBtn = findViewById<Button>(R.id.btnSubmit)
         val username = currentUser?.displayName.toString()
         submitBtn.setOnClickListener{
-            val q1 = findViewById<TextInputEditText>(R.id.a1).text.toString()
-            val q2 = findViewById<TextInputEditText>(R.id.a2).text.toString()
-            val q3 = findViewById<TextInputEditText>(R.id.a3).text.toString()
-            val q4 = findViewById<TextInputEditText>(R.id.a4).text.toString()
+            val q1 = findViewById<EditText>(R.id.a1).text.toString()
+            val q2 = findViewById<EditText>(R.id.a2).text.toString()
+            val q3 = findViewById<EditText>(R.id.a3).text.toString()
+            val q4 = findViewById<EditText>(R.id.a4).text.toString()
 //            var posts = mutableListOf<String>()
 //            var bookmarks = mutableListOf<String>()
             val person = Person(username, q1, q2, q3, q4, currentUser?.uid.toString())

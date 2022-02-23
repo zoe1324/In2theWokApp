@@ -43,10 +43,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/a1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/q2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/q1"
@@ -64,10 +65,11 @@
             app:layout_constraintStart_toStartOf="@id/a1"
             app:layout_constraintTop_toBottomOf="@id/a1" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/a2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/q3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/q2"
@@ -85,10 +87,11 @@
             app:layout_constraintStart_toStartOf="@id/a2"
             app:layout_constraintTop_toBottomOf="@id/a2" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/a3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/q4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/q3"
@@ -106,10 +109,11 @@
             app:layout_constraintStart_toStartOf="@id/a3"
             app:layout_constraintTop_toBottomOf="@id/a3" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/a4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/q4"
