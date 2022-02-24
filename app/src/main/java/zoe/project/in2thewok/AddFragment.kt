@@ -10,8 +10,11 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -49,6 +52,8 @@ class AddFragment : Fragment() {
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private var storageRef = FirebaseStorage.getInstance().reference
     private var remoteUri: String? = null
+    private val ingredients = ArrayList<String>()
+    private val steps = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,9 +79,65 @@ class AddFragment : Fragment() {
 
         binding.btnUploadData.setOnClickListener{
             val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
-                remoteUri, null, binding.recipeTitle.text.toString(), listOf(), binding.cuisineType.text.toString(), listOf(), binding.recipeStory.text.toString())
+                remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString(), steps, binding.recipeStory.text.toString())
             addPost(post)
         }
+
+
+//        var lvIngredients = binding.lvIngredients
+//        val adapter = ArrayAdapter(this.requireContext(), R.layout.list_item, R.id.tvListItem, ingredients)
+        var ingredient = ""
+        var step = ""
+//        lvIngredients.adapter = adapter
+
+        binding.btnAddIngred.setOnClickListener{
+            ingredient = binding.etAddIngredient.text.toString()
+            val tv = TextView(context?.applicationContext)
+            tv.id = View.generateViewId()
+            tv.text = ingredient
+            ingredients.add(ingredient)
+            binding.llIngredients.addView(tv)
+            val params = tv.layoutParams as LinearLayout.LayoutParams
+            params.width = MATCH_PARENT
+            params.height = WRAP_CONTENT
+            tv.requestLayout()
+            binding.etAddIngredient.text.clear()
+        }
+
+        binding.btnAddSteps.setOnClickListener{
+            step = binding.etAddStep.text.toString()
+            val tv = TextView(context?.applicationContext)
+            tv.id = View.generateViewId()
+            tv.text = step
+            steps.add(step)
+            binding.llSteps.addView(tv)
+            val params = tv.layoutParams as LinearLayout.LayoutParams
+            params.width = MATCH_PARENT
+            params.height = WRAP_CONTENT
+            tv.requestLayout()
+            binding.etAddStep.text.clear()
+        }
+
+//        binding.btnAddSteps.setOnClickListener{
+
+//            et.id = View.generateViewId()
+////            val btn = Button(context?.applicationContext)
+//            binding.clNewPost.addView(et)
+////            binding.clNewPost.addView(btn)
+//            val params = et.layoutParams as ConstraintLayout.LayoutParams
+//            params.startToStart = stepCurrent
+//            params.topToBottom = stepCurrent
+//
+//            params.width = MATCH_PARENT
+//            params.height = WRAP_CONTENT
+
+//            et.requestLayout()
+//            val btnParams = binding.btnAddSteps.layoutParams as ConstraintLayout.LayoutParams
+//            btnParams.topToBottom = et.id
+//            binding.btnAddSteps.requestLayout()
+//            steps.add(et)
+//            stepCurrent = et.id
+
 
         // TODO: Check if regex is necessary here, also don't upload to Firebase before the post is done
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){

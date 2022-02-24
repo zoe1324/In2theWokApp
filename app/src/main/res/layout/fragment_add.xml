@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +7,7 @@
     android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clNewPost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".AddFragment">
@@ -100,11 +100,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/cvPostView"
-            app:layout_constraintBottom_toTopOf="@id/btnAddIngred"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/etAddIngredient"
             android:textSize="30sp"
             android:paddingStart="20sp"
             android:text="Ingredients:"/>
+
+        <EditText
+            android:id="@+id/etAddIngredient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type an ingredient here then tap 'Add New Ingredient'"
+            app:layout_constraintTop_toBottomOf="@id/tvIngredients"
+            app:layout_constraintBottom_toTopOf="@id/llIngredients"/>
+
+        <LinearLayout
+            android:id="@+id/llIngredients"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/etAddIngredient"
+            app:layout_constraintBottom_toTopOf="@id/btnAddIngred"/>
 
         <Button
             android:id="@+id/btnAddIngred"
@@ -114,18 +130,35 @@
             android:text="Add New Ingredient"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvIngredients"/>
+            app:layout_constraintBottom_toTopOf="@id/tvSteps"
+            app:layout_constraintTop_toBottomOf="@id/llIngredients"/>
 
         <TextView
             android:id="@+id/tvSteps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/btnAddIngred"
-            app:layout_constraintBottom_toTopOf="@id/cvAddImg"
+            app:layout_constraintBottom_toTopOf="@id/etAddStep"
             app:layout_constraintStart_toStartOf="parent"
             android:textSize="30sp"
             android:paddingStart="20sp"
             android:text="Steps:"/>
+
+        <EditText
+            android:id="@+id/etAddStep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type a recipe step here then tap 'Add New Step'"
+            app:layout_constraintTop_toBottomOf="@id/tvSteps"
+            app:layout_constraintBottom_toTopOf="@id/llSteps"/>
+
+        <LinearLayout
+            android:id="@+id/llSteps"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/etAddStep"
+            app:layout_constraintBottom_toTopOf="@id/btnAddSteps"/>
 
         <Button
             android:id="@+id/btnAddSteps"
@@ -135,7 +168,8 @@
             android:text="Add New Step"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSteps"/>
+            app:layout_constraintTop_toBottomOf="@id/llSteps"
+            app:layout_constraintBottom_toTopOf="@id/cvAddImg"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cvAddImg"
@@ -174,6 +208,7 @@
             android:adjustViewBounds="true"
             android:maxWidth="200sp"
             android:maxHeight="200sp"
+            app:layout_constraintTop_toBottomOf="@id/btnAddSteps"
             app:layout_constraintBottom_toTopOf="@id/btnUploadData"
             app:layout_constraintStart_toEndOf="@id/cvAddImg"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -186,8 +221,7 @@
             android:layout_marginBottom="40sp"
             app:layout_constraintTop_toBottomOf="@id/cvAddImg"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

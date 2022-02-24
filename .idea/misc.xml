@@ -19,7 +19,7 @@
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/activity_registry_qs.xml" value="0.23822463768115942" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/activity_welcome.xml" value="0.264" />
-        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_add.xml" value="0.18518518518518517" />
+        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_add.xml" value="0.2" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_article.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_articles_fun_facts.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_feed.xml" value="0.1" />
@@ -28,6 +28,7 @@
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_info.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_new_post.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_profile.xml" value="0.2" />
+        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/list_item.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
       </map>
     </option>
