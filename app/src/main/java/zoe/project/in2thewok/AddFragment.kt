@@ -89,6 +89,9 @@ class AddFragment : Fragment() {
         var ingredient = ""
         var step = ""
 //        lvIngredients.adapter = adapter
+// TODO: Make the list items disappear 'refresh' after posting,
+//  and also maintain the list when you exit the page.
+//  Also implement a 'clear page' button, clean up the styling.
 
         binding.btnAddIngred.setOnClickListener{
             ingredient = binding.etAddIngredient.text.toString()
