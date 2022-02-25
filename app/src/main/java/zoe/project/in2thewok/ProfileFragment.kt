@@ -110,7 +110,7 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-
+    // TODO: Put a recycler view in for posts??
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
 
         try {
