@@ -29,11 +29,9 @@ class ArticleFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
-    private var layoutManager: RecyclerView.LayoutManager? = null
-//    private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
-    private var titles = arrayOf("1","2")
-    private var details = arrayOf("details of person icon", "details of home icon")
-    private var images = arrayOf(R.drawable.ic_person, R.drawable.ic_home)
+    private var titles = arrayListOf("1","2")
+    private var details = arrayListOf("details of person icon", "details of home icon")
+    private var images = arrayListOf(R.drawable.ic_person, R.drawable.ic_home)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +51,7 @@ class ArticleFragment : Fragment() {
         binding.rvArticles.hasFixedSize()
         binding.rvArticles.layoutManager = LinearLayoutManager(context)
         binding.rvArticles.itemAnimator = DefaultItemAnimator()
-        binding.rvArticles.adapter = RecyclerAdapter(R.layout.layout_preview)
+        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
 
 
 
@@ -74,7 +72,7 @@ class ArticleFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    inner class RecyclerAdapter(val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
+    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
             return ViewHolder(view)
@@ -84,7 +82,7 @@ class ArticleFragment : Fragment() {
 //            holder.itemTitle.text = titles[position]
 //            holder.itemDescription.text = details[position]
 //            holder.itemImage.setImageResource(images[position])
-            holder.updateItems()
+            holder.updateItems(titles[position], details[position], images[position])
         }
 
         override fun getItemCount(): Int {
@@ -97,10 +95,10 @@ class ArticleFragment : Fragment() {
         var itemTitle: TextView = itemView.findViewById(R.id.tvPreviewTitle)
         var itemDescription: TextView = itemView.findViewById(R.id.tvPreviewDescription)
 
-        fun updateItems(){
-            itemTitle.text = "titles[1]"
-            itemDescription.text = "details[1]"
-            itemImage.setImageResource(R.drawable.ic_home)
+        fun updateItems(title: String, detail: String, image: Int){
+            itemTitle.text = title
+            itemDescription.text = detail
+            itemImage.setImageResource(image)
         }
 
     }
