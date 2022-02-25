@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.github.ponnamkarthik.richlinkpreview.ViewListener
 import zoe.project.in2thewok.databinding.FragmentArticleBinding
+import java.lang.Exception
 
-// TODO: Rename parameter arguments, choose names that match
+ // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -29,9 +31,9 @@ class ArticleFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
-    private var titles = arrayListOf("1","2")
-    private var details = arrayListOf("details of person icon", "details of home icon")
-    private var images = arrayListOf(R.drawable.ic_person, R.drawable.ic_home)
+    private var titles = arrayListOf("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/","https://stackoverflow.com", "https://www.youtube.com/")
+//    private var details = arrayListOf("details of person icon", "details of home icon")
+//    private var images = arrayListOf(R.drawable.ic_person, R.drawable.ic_baseline_post_add_24)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +53,8 @@ class ArticleFragment : Fragment() {
         binding.rvArticles.hasFixedSize()
         binding.rvArticles.layoutManager = LinearLayoutManager(context)
         binding.rvArticles.itemAnimator = DefaultItemAnimator()
-        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
+        binding.rvArticles.adapter = RecyclerAdapter(titles, R.layout.layout_preview)
+//        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
 
 
 
@@ -72,8 +75,9 @@ class ArticleFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+//    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
+    inner class RecyclerAdapter(val linkArray: ArrayList<String>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
+         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
             return ViewHolder(view)
         }
@@ -82,7 +86,7 @@ class ArticleFragment : Fragment() {
 //            holder.itemTitle.text = titles[position]
 //            holder.itemDescription.text = details[position]
 //            holder.itemImage.setImageResource(images[position])
-            holder.updateItems(titles[position], details[position], images[position])
+            holder.updateItems(titles[position])
         }
 
         override fun getItemCount(): Int {
@@ -91,14 +95,25 @@ class ArticleFragment : Fragment() {
 
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        var itemImage: ImageView = itemView.findViewById(R.id.ivPreview)
-        var itemTitle: TextView = itemView.findViewById(R.id.tvPreviewTitle)
-        var itemDescription: TextView = itemView.findViewById(R.id.tvPreviewDescription)
+//        var itemImage: ImageView = itemView.findViewById(R.id.ivPreview)
+//        var itemTitle: TextView = itemView.findViewById(R.id.tvPreviewTitle)
+//        var itemDescription: TextView = itemView.findViewById(R.id.tvPreviewDescription)
+        var urlPreview = itemView.findViewById<io.github.ponnamkarthik.richlinkpreview.RichLinkView>(R.id.richLinkView)
 
-        fun updateItems(title: String, detail: String, image: Int){
-            itemTitle.text = title
-            itemDescription.text = detail
-            itemImage.setImageResource(image)
+//        fun updateItems(title: String, detail: String, image: Int){
+        fun updateItems(title: String){
+            urlPreview.setLink(title, object : ViewListener{
+                override fun onSuccess(status: Boolean) {
+
+                }
+
+                override fun onError(e: Exception?) {
+
+                }
+            })
+//            itemTitle.text = title
+//            itemDescription.text = detail
+//            itemImage.setImageResource(image)
         }
 
     }
