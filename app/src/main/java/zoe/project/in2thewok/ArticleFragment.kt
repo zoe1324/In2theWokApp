@@ -5,13 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import io.github.ponnamkarthik.richlinkpreview.ViewListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import zoe.project.in2thewok.databinding.FragmentArticleBinding
 import java.lang.Exception
 
@@ -31,7 +34,9 @@ class ArticleFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
-    private var titles = arrayListOf("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/","https://stackoverflow.com", "https://www.youtube.com/")
+    private val articleCollectionRef = Firebase.firestore.collection("articles").document("fun").collection("fun_facts")
+    private val articles = arrayListOf<String>()
+//    private var articles = arrayListOf("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/","https://stackoverflow.com", "https://www.youtube.com/")
 //    private var details = arrayListOf("details of person icon", "details of home icon")
 //    private var images = arrayListOf(R.drawable.ic_person, R.drawable.ic_baseline_post_add_24)
 
@@ -50,10 +55,11 @@ class ArticleFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentArticleBinding.inflate(inflater, container, false)
+        retrieveArticles()
         binding.rvArticles.hasFixedSize()
         binding.rvArticles.layoutManager = LinearLayoutManager(context)
         binding.rvArticles.itemAnimator = DefaultItemAnimator()
-        binding.rvArticles.adapter = RecyclerAdapter(titles, R.layout.layout_preview)
+        binding.rvArticles.adapter = RecyclerAdapter(articles, R.layout.layout_preview)
 //        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
 
 
@@ -86,11 +92,11 @@ class ArticleFragment : Fragment() {
 //            holder.itemTitle.text = titles[position]
 //            holder.itemDescription.text = details[position]
 //            holder.itemImage.setImageResource(images[position])
-            holder.updateItems(titles[position])
+            holder.updateItems(linkArray[position])
         }
 
         override fun getItemCount(): Int {
-            return titles.size
+            return linkArray.size
         }
 
     }
@@ -116,6 +122,19 @@ class ArticleFragment : Fragment() {
 //            itemImage.setImageResource(image)
         }
 
+    }
+//TODO: Fix this weird loop that adds the urls in multiple times forever
+    private fun retrieveArticles(){
+        CoroutineScope(Dispatchers.IO).launch{
+            val querySnapshot = articleCollectionRef
+                .get()
+                .await()
+            for (document in querySnapshot.documents) {
+                val url = "${document["url"]}"
+                articles.add(url)
+                val add = 1
+            }
+        }
     }
 
     companion object {
