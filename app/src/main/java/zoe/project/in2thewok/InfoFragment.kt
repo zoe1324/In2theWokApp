@@ -5,14 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import io.github.ponnamkarthik.richlinkpreview.RichLinkView
 import io.github.ponnamkarthik.richlinkpreview.ViewListener
-import zoe.project.in2thewok.databinding.FragmentArticleBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentInfoBinding
 import java.lang.Exception
 
@@ -32,9 +37,8 @@ class InfoFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentInfoBinding? = null
     private val binding get() = _binding!!
-    private var titles = arrayListOf("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/","https://stackoverflow.com", "https://www.youtube.com/")
-//    private var details = arrayListOf("details of person icon", "details of home icon")
-//    private var images = arrayListOf(R.drawable.ic_person, R.drawable.ic_baseline_post_add_24)
+    private val healthArticleCollectionRef = Firebase.firestore.collection("articles").document("health").collection("health_articles")
+    private val healthArticles = arrayListOf<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,24 +55,7 @@ class InfoFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentInfoBinding.inflate(inflater, container, false)
-        binding.rvInfo.hasFixedSize()
-        binding.rvInfo.layoutManager = LinearLayoutManager(context)
-        binding.rvInfo.itemAnimator = DefaultItemAnimator()
-        binding.rvInfo.adapter = RecyclerAdapter(titles, R.layout.layout_preview)
-//        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
-
-
-
-
-
-//        layoutManager = LinearLayoutManager(context)
-//        var recyclerView = binding.rvArticles
-//        recyclerView.layoutManager = layoutManager
-//        adapter = RecyclerAdapter()
-//        recyclerView.adapter = adapter
-//        val wv = binding.webViewTest
-//        wv.loadUrl("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/")
-
+        retrieveArticles()
         return binding.root
     }
 
@@ -87,11 +74,11 @@ class InfoFragment : Fragment() {
 //            holder.itemTitle.text = titles[position]
 //            holder.itemDescription.text = details[position]
 //            holder.itemImage.setImageResource(images[position])
-            holder.updateItems(titles[position])
+            holder.updateItems(linkArray[position])
         }
 
         override fun getItemCount(): Int {
-            return titles.size
+            return linkArray.size
         }
 
     }
@@ -99,7 +86,7 @@ class InfoFragment : Fragment() {
         //        var itemImage: ImageView = itemView.findViewById(R.id.ivPreview)
 //        var itemTitle: TextView = itemView.findViewById(R.id.tvPreviewTitle)
 //        var itemDescription: TextView = itemView.findViewById(R.id.tvPreviewDescription)
-        var urlPreview = itemView.findViewById<io.github.ponnamkarthik.richlinkpreview.RichLinkView>(R.id.richLinkView)
+        var urlPreview: RichLinkView = itemView.findViewById<io.github.ponnamkarthik.richlinkpreview.RichLinkView>(R.id.richLinkView)
 
         //        fun updateItems(title: String, detail: String, image: Int){
         fun updateItems(title: String){
@@ -117,6 +104,29 @@ class InfoFragment : Fragment() {
 //            itemImage.setImageResource(image)
         }
 
+    }
+    //TODO: Fix this weird loop that adds the urls in multiple times forever
+    private fun retrieveArticles() = CoroutineScope(Dispatchers.IO).launch{
+        try {
+            val querySnapshot = healthArticleCollectionRef
+                .get()
+                .await()
+            for (document in querySnapshot.documents) {
+                val url = "${document["url"]}"
+                healthArticles.add(url)
+            }
+            withContext(Dispatchers.Main){
+                binding.rvInfo.hasFixedSize()
+                binding.rvInfo.layoutManager = LinearLayoutManager(context)
+                binding.rvInfo.itemAnimator = DefaultItemAnimator()
+                binding.rvInfo.adapter = RecyclerAdapter(healthArticles, R.layout.layout_preview)
+            }
+        } catch (e: Exception){
+            val context = context?.applicationContext
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     companion object {

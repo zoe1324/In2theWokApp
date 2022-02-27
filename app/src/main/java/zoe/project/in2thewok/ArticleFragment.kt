@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentArticleBinding
 import java.lang.Exception
 
@@ -56,10 +58,6 @@ class ArticleFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentArticleBinding.inflate(inflater, container, false)
         retrieveArticles()
-        binding.rvArticles.hasFixedSize()
-        binding.rvArticles.layoutManager = LinearLayoutManager(context)
-        binding.rvArticles.itemAnimator = DefaultItemAnimator()
-        binding.rvArticles.adapter = RecyclerAdapter(articles, R.layout.layout_preview)
 //        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
 
 
@@ -124,15 +122,25 @@ class ArticleFragment : Fragment() {
 
     }
 //TODO: Fix this weird loop that adds the urls in multiple times forever
-    private fun retrieveArticles(){
-        CoroutineScope(Dispatchers.IO).launch{
+    private fun retrieveArticles() = CoroutineScope(Dispatchers.IO).launch{
+        try {
             val querySnapshot = articleCollectionRef
                 .get()
                 .await()
             for (document in querySnapshot.documents) {
                 val url = "${document["url"]}"
                 articles.add(url)
-                val add = 1
+            }
+            withContext(Dispatchers.Main){
+                binding.rvArticles.hasFixedSize()
+                binding.rvArticles.layoutManager = LinearLayoutManager(context)
+                binding.rvArticles.itemAnimator = DefaultItemAnimator()
+                binding.rvArticles.adapter = RecyclerAdapter(articles, R.layout.layout_preview)
+            }
+        } catch (e: Exception){
+            val context = context?.applicationContext
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
             }
         }
     }
