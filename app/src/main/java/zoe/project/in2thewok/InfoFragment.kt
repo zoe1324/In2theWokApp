@@ -1,11 +1,11 @@
 package zoe.project.in2thewok
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentInfoBinding
-import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -71,14 +70,21 @@ class InfoFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//            holder.itemTitle.text = titles[position]
-//            holder.itemDescription.text = details[position]
-//            holder.itemImage.setImageResource(images[position])
             holder.updateItems(linkArray[position])
         }
 
         override fun getItemCount(): Int {
             return linkArray.size
+        }
+
+//    TODO: Look at explanation of this fix
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return position
         }
 
     }

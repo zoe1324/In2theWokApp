@@ -97,6 +97,16 @@ class ArticleFragment : Fragment() {
             return linkArray.size
         }
 
+//    TODO: Look at explanation of this fix
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return position
+        }
+
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 //        var itemImage: ImageView = itemView.findViewById(R.id.ivPreview)
