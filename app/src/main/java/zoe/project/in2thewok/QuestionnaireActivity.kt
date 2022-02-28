@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+// TODO: if user presses back button while here or while setting a username, then the app goes to homepage? Fix something
+
 class QuestionnaireActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -45,7 +47,7 @@ class QuestionnaireActivity : AppCompatActivity() {
         }
 
         val skipBtn = findViewById<Button>(R.id.btnSkip)
-
+//  TODO: This works but I never see 'They haven't told us yet!' appear on a profile that skipped
         skipBtn.setOnClickListener {
 //            var posts = mutableListOf<String>()
 //            var bookmarks = mutableListOf<String>()

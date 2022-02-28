@@ -1,26 +1,18 @@
- package zoe.project.in2thewok
+package zoe.project.in2thewok
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import io.github.ponnamkarthik.richlinkpreview.RichLinkView
 import io.github.ponnamkarthik.richlinkpreview.ViewListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentArticleBinding
-import java.lang.Exception
 
- // TODO: Rename parameter arguments, choose names that match
+// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -36,11 +28,7 @@ class ArticleFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
-    private val articleCollectionRef = Firebase.firestore.collection("articles").document("fun").collection("fun_facts")
-    private val articles = arrayListOf<String>()
-//    private var articles = arrayListOf("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/","https://stackoverflow.com", "https://www.youtube.com/")
-//    private var details = arrayListOf("details of person icon", "details of home icon")
-//    private var images = arrayListOf(R.drawable.ic_person, R.drawable.ic_baseline_post_add_24)
+    private var articles = arrayListOf<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,21 +45,11 @@ class ArticleFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentArticleBinding.inflate(inflater, container, false)
-        retrieveArticles()
-//        binding.rvArticles.adapter = RecyclerAdapter(titles, details, images, R.layout.layout_preview)
-
-
-
-
-
-//        layoutManager = LinearLayoutManager(context)
-//        var recyclerView = binding.rvArticles
-//        recyclerView.layoutManager = layoutManager
-//        adapter = RecyclerAdapter()
-//        recyclerView.adapter = adapter
-//        val wv = binding.webViewTest
-//        wv.loadUrl("https://www.caribbeangreenliving.com/20-fun-facts-about-healthy-eating/")
-
+        binding.rvArticles.hasFixedSize()
+        binding.rvArticles.layoutManager = LinearLayoutManager(context)
+        binding.rvArticles.itemAnimator = DefaultItemAnimator()
+        articles = (activity as? HomeActivity)!!.articles
+        binding.rvArticles.adapter = RecyclerAdapter(articles, R.layout.layout_preview)
         return binding.root
     }
 
@@ -79,9 +57,9 @@ class ArticleFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-//    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
+    //    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
     inner class RecyclerAdapter(val linkArray: ArrayList<String>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
-         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
             return ViewHolder(view)
         }
@@ -109,12 +87,8 @@ class ArticleFragment : Fragment() {
 
     }
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-//        var itemImage: ImageView = itemView.findViewById(R.id.ivPreview)
-//        var itemTitle: TextView = itemView.findViewById(R.id.tvPreviewTitle)
-//        var itemDescription: TextView = itemView.findViewById(R.id.tvPreviewDescription)
-        var urlPreview = itemView.findViewById<io.github.ponnamkarthik.richlinkpreview.RichLinkView>(R.id.richLinkView)
+        var urlPreview: RichLinkView = itemView.findViewById(R.id.richLinkView)
 
-//        fun updateItems(title: String, detail: String, image: Int){
         fun updateItems(title: String){
             urlPreview.setLink(title, object : ViewListener{
                 override fun onSuccess(status: Boolean) {
@@ -125,34 +99,9 @@ class ArticleFragment : Fragment() {
 
                 }
             })
-//            itemTitle.text = title
-//            itemDescription.text = detail
-//            itemImage.setImageResource(image)
+
         }
 
-    }
-//TODO: Fix this weird loop that adds the urls in multiple times forever
-    private fun retrieveArticles() = CoroutineScope(Dispatchers.IO).launch{
-        try {
-            val querySnapshot = articleCollectionRef
-                .get()
-                .await()
-            for (document in querySnapshot.documents) {
-                val url = "${document["url"]}"
-                articles.add(url)
-            }
-            withContext(Dispatchers.Main){
-                binding.rvArticles.hasFixedSize()
-                binding.rvArticles.layoutManager = LinearLayoutManager(context)
-                binding.rvArticles.itemAnimator = DefaultItemAnimator()
-                binding.rvArticles.adapter = RecyclerAdapter(articles, R.layout.layout_preview)
-            }
-        } catch (e: Exception){
-            val context = context?.applicationContext
-            withContext(Dispatchers.Main) {
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
     }
 
     companion object {

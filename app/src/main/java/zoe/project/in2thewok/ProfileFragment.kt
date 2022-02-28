@@ -130,6 +130,8 @@ class ProfileFragment : Fragment() {
                 postTitle = (post?.title)
                 imageURI = (post?.imageURI)
 
+//  TODO: Fix how this is styled, and navigate to the recipe 'fragment' that doesn't exist yet.
+
                 withContext(Dispatchers.Main) {
                     val iv = ImageView(context?.applicationContext)
                     val tv = TextView(context?.applicationContext)
@@ -172,7 +174,7 @@ class ProfileFragment : Fragment() {
             val context = context?.applicationContext
             withContext(Dispatchers.Main) {
                 if (context != null) {
-                    if(!(e.message.equals(null )))
+                    if(!(e.message.equals(null)))
                         Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                 }
                 println(e.message)
