@@ -40,7 +40,6 @@ lateinit var auth: FirebaseAuth
  * Use the [AddFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-// TODO: Add input validation for empty value(s)
 
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters

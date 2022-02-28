@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:layout_marginBottom="60sp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/clProfile"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="5sp"
         tools:context=".ProfileFragment">
+
         <LinearLayout
             android:id="@+id/llProfileIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -27,6 +25,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_person"
             android:layout_marginTop="30dp"/>
+
             <TextView
                 android:id="@+id/tvProfileTitle"
                 android:layout_width="wrap_content"
@@ -36,120 +35,138 @@
                 android:paddingTop="20dp"
                 android:text="User Profile"
                 android:textColor="@color/okabe_ito_vermilion"
-                android:textSize="30sp" />
+                android:textSize="30sp"/>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvQ1"
+        <LinearLayout
+            android:id="@+id/llQ1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your favourite cooking smell:"
-            android:textSize="20sp"
-            android:layout_rowWeight="0"
-            android:layout_columnWeight="0"
-            android:padding="10dp"
-            android:fontFamily="@font/roboto_light"
-            app:layout_constraintStart_toStartOf="@id/llProfileIcon"
-            app:layout_constraintTop_toBottomOf="@id/llProfileIcon"
-            app:layout_constraintBottom_toTopOf="@id/tvA1"/>
-
-        <TextView
-            android:id="@+id/tvQ2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your favourite fruit:"
-            android:textSize="20sp"
-            android:padding="10dp"
-            android:fontFamily="@font/roboto_light"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvA1"
-            app:layout_constraintBottom_toTopOf="@id/tvA2"/>
+            app:layout_constraintTop_toBottomOf="@id/llProfileIcon">
 
-        <TextView
-            android:id="@+id/tvA1"
+            <TextView
+                android:id="@+id/tvQ1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your favourite cooking smell:"
+                android:textSize="14sp"
+                android:padding="10dp"
+                android:fontFamily="@font/roboto_light" />
+            <TextView
+                android:id="@+id/tvA1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/okabe_ito_vermilion"
+                android:text=""
+                android:padding="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llQ2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/okabe_ito_vermilion"
-            android:text=""
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="@id/tvQ1"
-            app:layout_constraintTop_toBottomOf="@id/tvQ1"
-            app:layout_constraintBottom_toTopOf="@id/tvQ2"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            android:id="@+id/tvA2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/okabe_ito_vermilion"
-            android:text=""
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="@id/tvQ2"
-            app:layout_constraintTop_toBottomOf="@id/tvQ2"
-            app:layout_constraintBottom_toTopOf="@id/tvQ3"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <TextView
-            android:id="@+id/tvQ3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your favourite vegetable:"
-            android:textSize="20sp"
-            android:fontFamily="@font/roboto_light"
-            android:padding="10dp"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvA2"
-            app:layout_constraintBottom_toTopOf="@id/tvA3"/>
+            app:layout_constraintTop_toBottomOf="@id/llQ1">
 
-        <TextView
-            android:id="@+id/tvQ4"
+            <TextView
+                android:id="@+id/tvQ2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your favourite fruit:"
+                android:textSize="14sp"
+                android:padding="10dp"
+                android:fontFamily="@font/roboto_light" />
+            <TextView
+                android:id="@+id/tvA2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/okabe_ito_vermilion"
+                android:text=""
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llQ3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your favourite cuisine:"
-            android:textSize="20sp"
-            android:fontFamily="@font/roboto_light"
-            android:padding="10dp"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvA3"
-            app:layout_constraintBottom_toTopOf="@id/tvA4"
-            />
+            app:layout_constraintTop_toBottomOf="@id/llQ2">
 
-        <TextView
-            android:id="@+id/tvA3"
+            <TextView
+                android:id="@+id/tvQ3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your favourite vegetable:"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_light"
+                android:padding="10dp"/>
+            <TextView
+                android:id="@+id/tvA3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/okabe_ito_vermilion"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llQ4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="17sp"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/okabe_ito_vermilion"
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="@id/tvQ3"
-            app:layout_constraintTop_toBottomOf="@id/tvQ3"
-            app:layout_constraintBottom_toTopOf="@id/tvQ4"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llQ3">
+            <TextView
+                android:id="@+id/tvQ4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your favourite cuisine:"
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_light"
+                android:padding="10dp"
+                />
+            <TextView
+                android:id="@+id/tvA4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/okabe_ito_vermilion"
+                android:padding="5dp"/>
+        </LinearLayout>
+    <TextView
+        android:id="@+id/tvPostsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_light"
+        android:padding="10dp"
+        android:text="Your Posts:"
+        android:textColor="@color/okabe_ito_vermilion"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llQ4"
+        />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUserPosts"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/tvA4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="17sp"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/okabe_ito_vermilion"
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="@id/tvQ4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvQ4"/>
+            app:layout_constraintTop_toBottomOf="@id/tvPostsTitle"
+            android:layout_marginBottom="55sp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.core.widget.NestedScrollView>
-
-
-
-

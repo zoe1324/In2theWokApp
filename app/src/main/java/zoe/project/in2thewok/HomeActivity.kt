@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,15 +32,16 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var infoFragment: InfoFragment
     private val articleCollectionRef = Firebase.firestore.collection("articles").document("fun").collection("fun_facts")
     private val healthArticleCollectionRef = Firebase.firestore.collection("articles").document("health").collection("health_articles")
+    private val postCollectionRef = Firebase.firestore.collection("posts")
     val articles = arrayListOf<String>()
     val healthArticles = arrayListOf<String>()
+    val posts = arrayListOf<Post>()
+    private lateinit var auth: FirebaseAuth
 
-    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_home)
-        supportActionBar?.title = "Hello" + Firebase.auth.currentUser?.displayName
-        supportActionBar?.show()
+//        supportActionBar?.title = "Hello" + Firebase.auth.currentUser?.displayName
+//        supportActionBar?.show()
         homeFragment = HomeFragment()
         profileFragment = ProfileFragment()
         addFragment = AddFragment()
@@ -54,28 +56,29 @@ class HomeActivity : AppCompatActivity() {
         auth = Firebase.auth
         retrieveFunArticles()
         retrieveHealthArticles()
+        retrievePosts()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
                 R.id.home -> {
                     replaceFragment(R.id.frag_layout, homeFragment)
-                    supportActionBar?.title = "Home"
+//                    supportActionBar?.title = "Home"
                 }
                 R.id.profile -> {
                     replaceFragment(R.id.frag_layout, profileFragment)
-                    supportActionBar?.title = "Profile"
+//                    supportActionBar?.title = "Profile"
                 }
                 R.id.add -> {
                     replaceFragment(R.id.frag_layout, addFragment)
-                    supportActionBar?.title = "Create New Post"
+//                    supportActionBar?.title = "Create New Post"
                 }
                 R.id.articles -> {
                     replaceFragment(R.id.frag_layout, articleFragment)
-                    supportActionBar?.title = "Fun Food Articles/Reminders to Eat Healthily"
+//                    supportActionBar?.title = "Fun Food Articles/Reminders to Eat Healthily"
                 }
                 R.id.info -> {
                     replaceFragment(R.id.frag_layout, infoFragment)
-                    supportActionBar?.title = "Nutritional Information"
+//                    supportActionBar?.title = "Nutritional Information"
                 }
             }
             true
@@ -114,10 +117,30 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
+
+        try {
+            val querySnapshot = postCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid)
+                .get()
+                .await()
+            for (document in querySnapshot.documents) {
+                document.toObject<Post>()?.let { posts.add(it) }
+            }
+//  TODO: Fix how this is styled, and navigate to the recipe 'fragment' that doesn't exist yet.
+
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        supportActionBar?.title = "Home"
-        supportActionBar?.title = "Hello " + Firebase.auth.currentUser?.displayName
+//        supportActionBar?.title = "Home"
+//        supportActionBar?.title = "Hello " + Firebase.auth.currentUser?.displayName
         supportActionBar?.hide()
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth

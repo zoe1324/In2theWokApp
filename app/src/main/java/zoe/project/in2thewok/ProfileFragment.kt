@@ -1,20 +1,28 @@
 package zoe.project.in2thewok
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import io.github.ponnamkarthik.richlinkpreview.RichLinkView
+import io.github.ponnamkarthik.richlinkpreview.ViewListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +48,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private val personCollectionRef = Firebase.firestore.collection("people")
-//    private val docRef: DocumentReference? = null
+    private var posts = arrayListOf<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +56,7 @@ class ProfileFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
     }
 
     override fun onCreateView(
@@ -56,19 +65,139 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding.rvUserPosts.hasFixedSize()
+        binding.rvUserPosts.layoutManager = LinearLayoutManager(context)
+        binding.rvUserPosts.itemAnimator = DefaultItemAnimator()
+        posts = (activity as? HomeActivity)!!.posts
+        binding.rvUserPosts.adapter = RecyclerAdapter(posts, R.layout.layout_recipe)
         return binding.root
+    }
+
+    private fun addPosts(posts: ArrayList<Post>) = CoroutineScope(Dispatchers.IO).launch{
+        try{
+            var current = binding.llQ4.id
+
+            for(post in posts){
+                withContext(Dispatchers.Main){
+                    val cardView = context?.applicationContext?.let { CardView(it) }
+                    val tvTitle = TextView(context?.applicationContext)
+                    val imageView = ImageView(context?.applicationContext)
+                    binding.clProfile.addView(cardView)
+                    cardView?.addView(tvTitle)
+                    cardView?.addView(imageView)
+
+                    tvTitle.text = post.title
+                    val textParams= tvTitle.layoutParams as ConstraintLayout.LayoutParams
+                    val imgParams= imageView.layoutParams as ConstraintLayout.LayoutParams
+                    val cardParams= cardView?.layoutParams as ConstraintLayout.LayoutParams
+
+                    cardParams.startToStart = MATCH_PARENT
+                    cardParams.endToEnd = MATCH_PARENT
+                    cardParams.topToBottom = current
+                    cardView.requestLayout()
+                    cardParams.width = WRAP_CONTENT
+                    cardParams.height = WRAP_CONTENT
+
+                    cardView.id = View.generateViewId()
+                    tvTitle.id = View.generateViewId()
+                    imageView.id = View.generateViewId()
+
+                    current = cardView.id
+
+                    imageView.adjustViewBounds = true
+                    imageView.maxHeight = 700
+                    imageView.maxWidth = 700
+
+                    textParams.startToStart = current
+                    textParams.topToTop = current
+                    textParams.bottomToTop = imageView.id
+                    tvTitle.requestLayout()
+                    textParams.width = WRAP_CONTENT
+                    textParams.height = WRAP_CONTENT
+
+                    imgParams.startToStart = current
+                    imgParams.endToEnd = current
+                    imgParams.topToBottom = tvTitle.id
+                    imgParams.bottomToBottom = current
+
+                    Picasso.get()
+                        .load(post.imageURI)
+                        .into(imageView)
+                    cardView.isClickable = true
+                    cardView.isFocusable = true
+
+                }
+
+            }
+        } catch(e: Exception){
+
+        }
     }
 
     override fun onStart() {
         super.onStart()
         auth = Firebase.auth
         setQuestionAnswers()
-        retrievePosts()
+//        addPosts(posts)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    inner class RecyclerAdapter(private val postArray: ArrayList<Post>,
+                                val layout: Int): RecyclerView.Adapter<ProfileFragment.ViewHolder>() {
+//
+//        private val cl: RecyclerViewClickListener =
+//
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.updateItems(postArray[position])
+        }
+
+        override fun getItemCount(): Int {
+            return postArray.size
+        }
+
+//    TODO: Look at explanation of this fix
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return position
+        }
+
+//        inner class RecyclerViewClickListener(){
+//            fun onClick(v: View, position: Int){
+//
+//            }
+//        }
+
+    }
+
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        var recipeTitle: TextView = itemView.findViewById(R.id.tvRecipeTitle)
+        var recipePhoto: ImageView = itemView.findViewById(R.id.ivRecipePhoto)
+//        var cardView: CardView = itemView.findViewById(R.id.cvRecipe)
+
+        fun updateItems(post: Post){
+            recipeTitle.text = post.title.toString()
+            Picasso.get()
+                        .load(post.imageURI)
+                        .into(recipePhoto)
+//            cardView.setOnClickListener{
+//                Toast.makeText(requireContext(), "clicked", Toast.LENGTH_LONG).show()
+//            }
+        }
+
     }
 
     //Add functionality for the TextViews to change to users answers
@@ -107,77 +236,6 @@ class ProfileFragment : Fragment() {
             val context = context?.applicationContext
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-    // TODO: Put a recycler view in for posts??
-    private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
-
-        try {
-//            reference =
-            val querySnapshot = postCollectionRef
-                .whereEqualTo("userID", auth.currentUser?.uid)
-                .get()
-                .await()
-            var idCount = 1
-            var current = binding.tvA4.id
-            var post: Post?
-            var postTitle: String?
-            var imageURI: String?
-            for (document in querySnapshot.documents) {
-
-                post = document.toObject<Post>()
-                postTitle = (post?.title)
-                imageURI = (post?.imageURI)
-
-//  TODO: Fix how this is styled, and navigate to the recipe 'fragment' that doesn't exist yet.
-
-                withContext(Dispatchers.Main) {
-                    val iv = ImageView(context?.applicationContext)
-                    val tv = TextView(context?.applicationContext)
-                    binding.clProfile.addView(tv)
-                    binding.clProfile.addView(iv)
-                    tv.text = postTitle
-                    tv.setPadding(50, 50, 50, 0)
-                    tv.id = idCount
-                    idCount++
-                    iv.id = idCount
-                    idCount++
-                    val params = tv.layoutParams as ConstraintLayout.LayoutParams
-                    params.startToStart = current
-                    params.endToEnd = current
-                    params.topToBottom = current
-                    tv.requestLayout()
-                    current = tv.id
-                    params.width = WRAP_CONTENT
-                    params.height = WRAP_CONTENT
-
-                    iv.adjustViewBounds = true
-                    iv.maxHeight = 700
-                    iv.maxWidth = 700
-                    val ivParams = iv.layoutParams as ConstraintLayout.LayoutParams
-                    ivParams.startToStart = current
-                    ivParams.endToEnd = current
-                    ivParams.topToBottom = current
-                    ivParams.width = WRAP_CONTENT
-                    ivParams.height = WRAP_CONTENT
-                    iv.setPadding(100, 100, 100, 50)
-                    iv.requestLayout()
-
-                    Picasso.get()
-                        .load(imageURI)
-                        .into(iv)
-                    current = iv.id
-                }
-            }
-        } catch (e: Exception) {
-            val context = context?.applicationContext
-            withContext(Dispatchers.Main) {
-                if (context != null) {
-                    if(!(e.message.equals(null)))
-                        Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-                }
-                println(e.message)
             }
         }
     }
