@@ -42,7 +42,7 @@ lateinit var auth: FirebaseAuth
  */
 
 // TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
-// TODO: Add some padding or make sure user can add steps more easily without collapsing the keyboard for every step
+// TODO: Add some padding or make sure user can add steps more easily without collapsing the keyboard for every step (maybe set a size for empty imageview?)
 // TODO: Fix the styling a bit
 // TODO: Make the list items disappear 'refresh' after posting,
 // TODO: Add a visible scrollbar?
@@ -153,26 +153,6 @@ class AddFragment : Fragment() {
             tv.requestLayout()
             binding.etAddStep.text.clear()
         }
-
-//        binding.btnAddSteps.setOnClickListener{
-
-//            et.id = View.generateViewId()
-////            val btn = Button(context?.applicationContext)
-//            binding.clNewPost.addView(et)
-////            binding.clNewPost.addView(btn)
-//            val params = et.layoutParams as ConstraintLayout.LayoutParams
-//            params.startToStart = stepCurrent
-//            params.topToBottom = stepCurrent
-//
-//            params.width = MATCH_PARENT
-//            params.height = WRAP_CONTENT
-
-//            et.requestLayout()
-//            val btnParams = binding.btnAddSteps.layoutParams as ConstraintLayout.LayoutParams
-//            btnParams.topToBottom = et.id
-//            binding.btnAddSteps.requestLayout()
-//            steps.add(et)
-//            stepCurrent = et.id
 
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
                 uri: Uri? ->
