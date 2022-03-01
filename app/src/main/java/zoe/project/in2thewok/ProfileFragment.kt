@@ -7,12 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,9 +50,9 @@ class ProfileFragment : Fragment() {
     private var param2: String? = null
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private val postCollectionRef = Firebase.firestore.collection("posts")
     private val personCollectionRef = Firebase.firestore.collection("people")
     private var posts = arrayListOf<Post>()
+    private lateinit var recipeFragment : RecipeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +60,7 @@ class ProfileFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        recipeFragment = RecipeFragment()
 
     }
 
@@ -73,66 +78,66 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    private fun addPosts(posts: ArrayList<Post>) = CoroutineScope(Dispatchers.IO).launch{
-        try{
-            var current = binding.llQ4.id
-
-            for(post in posts){
-                withContext(Dispatchers.Main){
-                    val cardView = context?.applicationContext?.let { CardView(it) }
-                    val tvTitle = TextView(context?.applicationContext)
-                    val imageView = ImageView(context?.applicationContext)
-                    binding.clProfile.addView(cardView)
-                    cardView?.addView(tvTitle)
-                    cardView?.addView(imageView)
-
-                    tvTitle.text = post.title
-                    val textParams= tvTitle.layoutParams as ConstraintLayout.LayoutParams
-                    val imgParams= imageView.layoutParams as ConstraintLayout.LayoutParams
-                    val cardParams= cardView?.layoutParams as ConstraintLayout.LayoutParams
-
-                    cardParams.startToStart = MATCH_PARENT
-                    cardParams.endToEnd = MATCH_PARENT
-                    cardParams.topToBottom = current
-                    cardView.requestLayout()
-                    cardParams.width = WRAP_CONTENT
-                    cardParams.height = WRAP_CONTENT
-
-                    cardView.id = View.generateViewId()
-                    tvTitle.id = View.generateViewId()
-                    imageView.id = View.generateViewId()
-
-                    current = cardView.id
-
-                    imageView.adjustViewBounds = true
-                    imageView.maxHeight = 700
-                    imageView.maxWidth = 700
-
-                    textParams.startToStart = current
-                    textParams.topToTop = current
-                    textParams.bottomToTop = imageView.id
-                    tvTitle.requestLayout()
-                    textParams.width = WRAP_CONTENT
-                    textParams.height = WRAP_CONTENT
-
-                    imgParams.startToStart = current
-                    imgParams.endToEnd = current
-                    imgParams.topToBottom = tvTitle.id
-                    imgParams.bottomToBottom = current
-
-                    Picasso.get()
-                        .load(post.imageURI)
-                        .into(imageView)
-                    cardView.isClickable = true
-                    cardView.isFocusable = true
-
-                }
-
-            }
-        } catch(e: Exception){
-
-        }
-    }
+//    private fun addPosts(posts: ArrayList<Post>) = CoroutineScope(Dispatchers.IO).launch{
+//        try{
+//            var current = binding.llQ4.id
+//
+//            for(post in posts){
+//                withContext(Dispatchers.Main){
+//                    val cardView = context?.applicationContext?.let { CardView(it) }
+//                    val tvTitle = TextView(context?.applicationContext)
+//                    val imageView = ImageView(context?.applicationContext)
+//                    binding.clProfile.addView(cardView)
+//                    cardView?.addView(tvTitle)
+//                    cardView?.addView(imageView)
+//
+//                    tvTitle.text = post.title
+//                    val textParams= tvTitle.layoutParams as ConstraintLayout.LayoutParams
+//                    val imgParams= imageView.layoutParams as ConstraintLayout.LayoutParams
+//                    val cardParams= cardView?.layoutParams as ConstraintLayout.LayoutParams
+//
+//                    cardParams.startToStart = MATCH_PARENT
+//                    cardParams.endToEnd = MATCH_PARENT
+//                    cardParams.topToBottom = current
+//                    cardView.requestLayout()
+//                    cardParams.width = WRAP_CONTENT
+//                    cardParams.height = WRAP_CONTENT
+//
+//                    cardView.id = View.generateViewId()
+//                    tvTitle.id = View.generateViewId()
+//                    imageView.id = View.generateViewId()
+//
+//                    current = cardView.id
+//
+//                    imageView.adjustViewBounds = true
+//                    imageView.maxHeight = 700
+//                    imageView.maxWidth = 700
+//
+//                    textParams.startToStart = current
+//                    textParams.topToTop = current
+//                    textParams.bottomToTop = imageView.id
+//                    tvTitle.requestLayout()
+//                    textParams.width = WRAP_CONTENT
+//                    textParams.height = WRAP_CONTENT
+//
+//                    imgParams.startToStart = current
+//                    imgParams.endToEnd = current
+//                    imgParams.topToBottom = tvTitle.id
+//                    imgParams.bottomToBottom = current
+//
+//                    Picasso.get()
+//                        .load(post.imageURI)
+//                        .into(imageView)
+//                    cardView.isClickable = true
+//                    cardView.isFocusable = true
+//
+//                }
+//
+//            }
+//        } catch(e: Exception){
+//
+//        }
+//    }
 
     override fun onStart() {
         super.onStart()
@@ -185,17 +190,22 @@ class ProfileFragment : Fragment() {
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var recipeTitle: TextView = itemView.findViewById(R.id.tvRecipeTitle)
+        var recipeType: TextView = itemView.findViewById(R.id.tvRecipeCuisineType)
         var recipePhoto: ImageView = itemView.findViewById(R.id.ivRecipePhoto)
 //        var cardView: CardView = itemView.findViewById(R.id.cvRecipe)
 
+        init{
+            itemView.setOnClickListener{
+                Toast.makeText(itemView.context, "clicked on ${recipeTitle.text}", Toast.LENGTH_LONG).show()
+            }
+        }
+
         fun updateItems(post: Post){
             recipeTitle.text = post.title.toString()
+            recipeType.text = post.cuisineType.toString()
             Picasso.get()
                         .load(post.imageURI)
                         .into(recipePhoto)
-//            cardView.setOnClickListener{
-//                Toast.makeText(requireContext(), "clicked", Toast.LENGTH_LONG).show()
-//            }
         }
 
     }
@@ -239,6 +249,16 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+
+    inline fun FragmentManager.doTransaction(func: FragmentTransaction.() ->
+    FragmentTransaction
+    ) {
+        beginTransaction().func().commit()
+    }
+    fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
+        supportFragmentManager.doTransaction{replace(frameId, fragment)}
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of
