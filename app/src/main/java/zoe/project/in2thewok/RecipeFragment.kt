@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import zoe.project.in2thewok.databinding.FragmentRecipeBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,7 +27,8 @@ class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
-
+    var recipeTitle: String? = null
+    var imageURI: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,9 @@ class RecipeFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        recipeTitle = arguments?.getString("title")
+        var ingredients = arrayListOf(arguments?.get("ingredients"))
+        imageURI = arguments?.getString("imageURI")
     }
 
     override fun onCreateView(
@@ -42,6 +47,18 @@ class RecipeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentRecipeBinding.inflate(inflater, container, false)
+//        val post = displayMessage.title
+        binding.tvRecipeTitle.text = recipeTitle.toString()
+        if (!imageURI.equals(null)) {
+            Picasso.get()
+                .load(imageURI)
+                .into(binding.ivRecipePhoto)
+        }
+        else{
+            Picasso.get()
+                .load(R.drawable.cooking)
+                .into(binding.ivRecipePhoto)
+        }
         return binding.root
     }
 

@@ -1,18 +1,17 @@
 package zoe.project.in2thewok
 
-import android.net.Uri
 import android.provider.MediaStore
-import java.net.URI
-import java.util.*
 
 data class Post(
+    var postID: String? = null,
     var userID: String = "",
     var username: String = "",
     var imageURI: String? = "",
     var video: MediaStore.Video? = null,
     var title: String? = "",
-    var ingredients: List<String?> = listOf(),
+    var ingredients: ArrayList<String> = arrayListOf(),
     var cuisineType: String? = "",
-    var steps: List<String?> = listOf(),
-    var story: String? = ""
+    var steps: ArrayList<String> = arrayListOf(),
+    var story: String? = "",
+    var comments: ArrayList<String> = arrayListOf()
 )

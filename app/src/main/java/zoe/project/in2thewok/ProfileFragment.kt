@@ -1,5 +1,6 @@
 package zoe.project.in2thewok
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -59,7 +60,13 @@ class ProfileFragment : Fragment() {
     private val personCollectionRef = Firebase.firestore.collection("people")
     private var posts = arrayListOf<Post>()
     private var bookmarked = arrayListOf<Post>()
-    private lateinit var recipeFragment : RecipeFragment
+    private lateinit var communicator: Communicator
+    private var auth = Firebase.auth
+//    private lateinit var currentPost: Post
+
+//    interface FragmentProfileListener{
+//        fun onRecipeSent(post: Post)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,8 +74,6 @@ class ProfileFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-        recipeFragment = RecipeFragment()
-
     }
 
     override fun onCreateView(
@@ -82,6 +87,7 @@ class ProfileFragment : Fragment() {
         binding.rvUserPosts.itemAnimator = DefaultItemAnimator()
         posts = (activity as? HomeActivity)!!.posts
         binding.rvUserPosts.adapter = RecyclerAdapter(posts, R.layout.layout_recipe)
+        communicator = activity as Communicator
         return binding.root
     }
 
@@ -89,7 +95,7 @@ class ProfileFragment : Fragment() {
         super.onStart()
         auth = Firebase.auth
         setQuestionAnswers()
-//        addPosts(posts)
+//        posts = (activity as? HomeActivity)!!.posts
     }
 
     override fun onDestroyView() {
@@ -97,11 +103,17 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 
+//    override fun onAttach(context: Context){
+//        super.onAttach(context)
+//        if (context is FragmentProfileListener){
+//            listener = (FragmentProfileListener) context
+//        } else {
+//            throw RuntimeException(context.toString() + "must implement FragmentProfileListener")
+//        }
+//    }
+
     inner class RecyclerAdapter(private val postArray: ArrayList<Post>,
                                 val layout: Int): RecyclerView.Adapter<ProfileFragment.ViewHolder>() {
-//
-//        private val cl: RecyclerViewClickListener =
-//
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
@@ -109,6 +121,8 @@ class ProfileFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//            currentPost = postArray[position]
+            holder.init(postArray[position])
             holder.updateItems(postArray[position])
         }
 
@@ -124,12 +138,6 @@ class ProfileFragment : Fragment() {
             return position
         }
 
-//        inner class RecyclerViewClickListener(){
-//            fun onClick(v: View, position: Int){
-//
-//            }
-//        }
-
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -137,9 +145,10 @@ class ProfileFragment : Fragment() {
         var recipeType: TextView = itemView.findViewById(R.id.tvRecipeCuisineType)
         var recipePhoto: ImageView = itemView.findViewById(R.id.ivRecipePhoto)
 
-        init{
+       fun init(post: Post){
             itemView.setOnClickListener{
                 Toast.makeText(itemView.context, "clicked on ${recipeTitle.text}", Toast.LENGTH_LONG).show()
+                communicator.recipePassComm(post)
             }
         }
 
@@ -199,16 +208,6 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-
-    inline fun FragmentManager.doTransaction(func: FragmentTransaction.() ->
-    FragmentTransaction
-    ) {
-        beginTransaction().func().commit()
-    }
-    fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
-        supportFragmentManager.doTransaction{replace(frameId, fragment)}
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -32,6 +32,7 @@ import zoe.project.in2thewok.databinding.FragmentAddBinding
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
+private lateinit var communicator: Communicator
 lateinit var auth: FirebaseAuth
 //Users could hold a collection of post ids only, that match up to an id that is in a separate posts collection
 
@@ -79,7 +80,7 @@ class AddFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentAddBinding.inflate(inflater, container, false)
-
+        communicator = activity as Communicator
         if (!remoteUri.equals(null)) {
             Picasso.get()
                 .load(remoteUri)
@@ -113,18 +114,13 @@ class AddFragment : Fragment() {
         }
 
         binding.btnUploadData.setOnClickListener{
-            val post = Post(auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
-                remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString(), steps, binding.recipeStory.text.toString())
+            val post = Post(null, auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
+                remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString(), steps, binding.recipeStory.text.toString(), arrayListOf())
             addPost(post)
         }
 
-
-//        var lvIngredients = binding.lvIngredients
-//        val adapter = ArrayAdapter(this.requireContext(), R.layout.list_item, R.id.tvListItem, ingredients)
         var ingredient = ""
         var step = ""
-//        lvIngredients.adapter = adapter
-
 
         binding.btnAddIngred.setOnClickListener{
             ingredient = binding.etAddIngredient.text.toString()
@@ -197,8 +193,9 @@ class AddFragment : Fragment() {
         try {
             //            personCollectionRef.add(person).await()
             //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()
-            postCollectionRef.add(post).await()
-
+            val ref = postCollectionRef.add(post)
+                .await()
+            val doc = ref.update("postID", ref.id)
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
                 Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
                 binding.recipeTitle.text.clear()
@@ -210,6 +207,7 @@ class AddFragment : Fragment() {
 //                imageUri = null
 //                remoteUri = null
             }
+            communicator.updatePostList()
         } catch(e: Exception){
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()

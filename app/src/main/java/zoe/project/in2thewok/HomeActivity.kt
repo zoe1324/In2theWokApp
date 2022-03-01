@@ -3,6 +3,7 @@ package zoe.project.in2thewok
 //import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -22,7 +23,7 @@ import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.ActivityHomeBinding
 import java.lang.Exception
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), Communicator{
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var homeFragment: HomeFragment
@@ -30,13 +31,17 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var addFragment: AddFragment
     private lateinit var articleFragment: ArticleFragment
     private lateinit var infoFragment: InfoFragment
+    private lateinit var recipeFragment: RecipeFragment
     private val articleCollectionRef = Firebase.firestore.collection("articles").document("fun").collection("fun_facts")
     private val healthArticleCollectionRef = Firebase.firestore.collection("articles").document("health").collection("health_articles")
     private val postCollectionRef = Firebase.firestore.collection("posts")
     val articles = arrayListOf<String>()
     val healthArticles = arrayListOf<String>()
     val posts = arrayListOf<Post>()
-    private lateinit var auth: FirebaseAuth
+    private var auth = Firebase.auth
+//    private val listener = ProfileFragment.FragmentProfileListener
+
+//    override fun listener.onRecipeSent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,6 +126,7 @@ class HomeActivity : AppCompatActivity() {
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
 
         try {
+            posts.clear()
             val querySnapshot = postCollectionRef
                 .whereEqualTo("userID", auth.currentUser?.uid)
                 .get()
@@ -163,6 +169,27 @@ class HomeActivity : AppCompatActivity() {
         supportFragmentManager.doTransaction{replace(frameId, fragment)}
     }
 
+    override fun recipePassComm(post: Post) {
+        val bundle = Bundle()
+        bundle.putString("postID", post.postID)
+        bundle.putString("userID", post.userID)
+        bundle.putString("username", post.username)
+        bundle.putString("imageURI", post.imageURI)
+        bundle.putString("title", post.title)
+        bundle.putStringArrayList("ingredients", post.ingredients)
+        bundle.putStringArrayList("steps", post.steps)
+        bundle.putString("cuisineType", post.cuisineType)
+        bundle.putString("story", post.story)
+        bundle.putStringArrayList("comments", arrayListOf())
+//        val transaction = this.supportFragmentManager.beginTransaction()
+        recipeFragment = RecipeFragment()
+        recipeFragment.arguments = bundle
+        replaceFragment(R.id.frag_layout, recipeFragment)
+    }
+
+    override fun updatePostList() {
+        retrievePosts()
+    }
 //    fun AppCompatActivity.removeFragment(fragment: Fragment) {
 //        supportFragmentManager.doTransaction{remove(fragment)}
 //    }
