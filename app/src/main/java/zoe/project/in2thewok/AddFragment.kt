@@ -42,7 +42,7 @@ lateinit var auth: FirebaseAuth
  */
 
 // TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
-
+// TODO: Add some padding or make sure user can add steps more easily without collapsing the keyboard for every step
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
