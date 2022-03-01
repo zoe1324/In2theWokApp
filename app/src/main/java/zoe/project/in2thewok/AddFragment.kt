@@ -47,8 +47,9 @@ lateinit var auth: FirebaseAuth
 // TODO: Make the list items disappear 'refresh' after posting,
 // TODO: Add a visible scrollbar?
 // TODO: don't make blank posts
-// TODO: Check if regex is necessary
+// TODO: Check if regex is necessary, probably not
 // TODO: Don't upload photo to Firebase before the post is done? or delete off the database if user clears it/changes photo
+// TODO: Post some actual example recipes
 
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters

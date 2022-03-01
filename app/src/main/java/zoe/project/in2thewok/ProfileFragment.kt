@@ -48,6 +48,7 @@ private const val ARG_PARAM2 = "param2"
 // TODO: Look at explanation of recyclerview fix
 // TODO: Add a 'My Bookmarks' view to switch between posts & bookmarked posts
 // TODO: Let user open the full recipe on a separate page, with a special recipe page layout, allow for comments/discussion
+// TODO: Show user they have no bookmarks yet if there are none, and not just a blank screen?
 
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
