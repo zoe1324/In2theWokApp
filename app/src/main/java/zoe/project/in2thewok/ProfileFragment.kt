@@ -203,9 +203,16 @@ class ProfileFragment : Fragment() {
         fun updateItems(post: Post){
             recipeTitle.text = post.title.toString()
             recipeType.text = post.cuisineType.toString()
-            Picasso.get()
-                        .load(post.imageURI)
-                        .into(recipePhoto)
+            if (post.imageURI != null) {
+                Picasso.get()
+                    .load(post.imageURI)
+                    .into(recipePhoto)
+            }
+            else{
+                Picasso.get()
+                    .load(R.drawable.cooking)
+                    .into(recipePhoto)
+            }
         }
 
     }
