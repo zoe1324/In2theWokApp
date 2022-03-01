@@ -43,6 +43,13 @@ lateinit var auth: FirebaseAuth
 
 // TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
 // TODO: Add some padding or make sure user can add steps more easily without collapsing the keyboard for every step
+// TODO: Fix the styling a bit
+// TODO: Make the list items disappear 'refresh' after posting,
+// TODO: Add a visible scrollbar?
+// TODO: don't make blank posts
+// TODO: Check if regex is necessary
+// TODO: Don't upload photo to Firebase before the post is done? or delete off the database if user clears it/changes photo
+
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -116,10 +123,7 @@ class AddFragment : Fragment() {
         var ingredient = ""
         var step = ""
 //        lvIngredients.adapter = adapter
-// TODO: Make the list items disappear 'refresh' after posting,
-//  and also maintain the list when you exit the page.
-//  Also implement a 'clear page' button, clean up the styling of the whole page.
-//  Add a visible scrollbar?
+
 
         binding.btnAddIngred.setOnClickListener{
             ingredient = binding.etAddIngredient.text.toString()
@@ -169,8 +173,6 @@ class AddFragment : Fragment() {
 //            steps.add(et)
 //            stepCurrent = et.id
 
-
-        // TODO: Check if regex is necessary here, also don't upload to Firebase before the post is done
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
                 uri: Uri? ->
             imageUri = uri
@@ -209,7 +211,6 @@ class AddFragment : Fragment() {
         _binding = null
     }
 
-    // TODO: don't make blank posts
     private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
         val context = context?.applicationContext
         try {

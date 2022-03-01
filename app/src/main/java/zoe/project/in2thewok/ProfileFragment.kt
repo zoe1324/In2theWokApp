@@ -44,6 +44,11 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+// TODO: Look at explanation of recyclerview fix
+// TODO: Add a 'My Bookmarks' view to switch between posts & bookmarked posts
+// TODO: Let user open the full recipe on a separate page, with a special recipe page layout, allow for comments/discussion
+
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -52,6 +57,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val personCollectionRef = Firebase.firestore.collection("people")
     private var posts = arrayListOf<Post>()
+    private var bookmarked = arrayListOf<Post>()
     private lateinit var recipeFragment : RecipeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,67 +83,6 @@ class ProfileFragment : Fragment() {
         binding.rvUserPosts.adapter = RecyclerAdapter(posts, R.layout.layout_recipe)
         return binding.root
     }
-
-//    private fun addPosts(posts: ArrayList<Post>) = CoroutineScope(Dispatchers.IO).launch{
-//        try{
-//            var current = binding.llQ4.id
-//
-//            for(post in posts){
-//                withContext(Dispatchers.Main){
-//                    val cardView = context?.applicationContext?.let { CardView(it) }
-//                    val tvTitle = TextView(context?.applicationContext)
-//                    val imageView = ImageView(context?.applicationContext)
-//                    binding.clProfile.addView(cardView)
-//                    cardView?.addView(tvTitle)
-//                    cardView?.addView(imageView)
-//
-//                    tvTitle.text = post.title
-//                    val textParams= tvTitle.layoutParams as ConstraintLayout.LayoutParams
-//                    val imgParams= imageView.layoutParams as ConstraintLayout.LayoutParams
-//                    val cardParams= cardView?.layoutParams as ConstraintLayout.LayoutParams
-//
-//                    cardParams.startToStart = MATCH_PARENT
-//                    cardParams.endToEnd = MATCH_PARENT
-//                    cardParams.topToBottom = current
-//                    cardView.requestLayout()
-//                    cardParams.width = WRAP_CONTENT
-//                    cardParams.height = WRAP_CONTENT
-//
-//                    cardView.id = View.generateViewId()
-//                    tvTitle.id = View.generateViewId()
-//                    imageView.id = View.generateViewId()
-//
-//                    current = cardView.id
-//
-//                    imageView.adjustViewBounds = true
-//                    imageView.maxHeight = 700
-//                    imageView.maxWidth = 700
-//
-//                    textParams.startToStart = current
-//                    textParams.topToTop = current
-//                    textParams.bottomToTop = imageView.id
-//                    tvTitle.requestLayout()
-//                    textParams.width = WRAP_CONTENT
-//                    textParams.height = WRAP_CONTENT
-//
-//                    imgParams.startToStart = current
-//                    imgParams.endToEnd = current
-//                    imgParams.topToBottom = tvTitle.id
-//                    imgParams.bottomToBottom = current
-//
-//                    Picasso.get()
-//                        .load(post.imageURI)
-//                        .into(imageView)
-//                    cardView.isClickable = true
-//                    cardView.isFocusable = true
-//
-//                }
-//
-//            }
-//        } catch(e: Exception){
-//
-//        }
-//    }
 
     override fun onStart() {
         super.onStart()
@@ -169,8 +114,6 @@ class ProfileFragment : Fragment() {
         override fun getItemCount(): Int {
             return postArray.size
         }
-
-//    TODO: Look at explanation of this fix
 
         override fun getItemId(position: Int): Long {
             return position.toLong()
