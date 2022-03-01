@@ -41,6 +41,8 @@ lateinit var auth: FirebaseAuth
  * create an instance of this fragment.
  */
 
+// TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
+
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -75,6 +77,31 @@ class AddFragment : Fragment() {
                 .load(remoteUri)
                 .into(binding.imgUpload)
             binding.tvUploadPhoto.text = "Change Photo"
+        }
+
+        if(ingredients.isNotEmpty()){
+            for(ingredient in ingredients){
+                val tv = TextView(context?.applicationContext)
+                tv.id = View.generateViewId()
+                tv.text = ingredient
+                binding.llIngredients.addView(tv)
+                val params = tv.layoutParams as LinearLayout.LayoutParams
+                params.width = MATCH_PARENT
+                params.height = WRAP_CONTENT
+                tv.requestLayout()
+            }
+        }
+        if(steps.isNotEmpty()){
+            for(step in steps){
+                val tv = TextView(context?.applicationContext)
+                tv.id = View.generateViewId()
+                tv.text = step
+                binding.llSteps.addView(tv)
+                val params = tv.layoutParams as LinearLayout.LayoutParams
+                params.width = MATCH_PARENT
+                params.height = WRAP_CONTENT
+                tv.requestLayout()
+            }
         }
 
         binding.btnUploadData.setOnClickListener{
@@ -160,6 +187,7 @@ class AddFragment : Fragment() {
                 }
             }
             binding.imgUpload.setImageURI(imageUri)
+            binding.imgUpload.visibility = VISIBLE
             binding.tvUploadPhoto.text = "Change Photo"
         }
 
@@ -194,11 +222,11 @@ class AddFragment : Fragment() {
                 binding.recipeTitle.text.clear()
                 binding.cuisineType.text.clear()
                 binding.recipeStory.text.clear()
-                binding.imgUpload.setImageURI(null)
+//                binding.imgUpload.setImageURI(null)
                 binding.tvUploadPhoto.text = "Add A Photo"
                 binding.imgUpload.visibility = INVISIBLE
-                imageUri = null
-                remoteUri = null
+//                imageUri = null
+//                remoteUri = null
             }
         } catch(e: Exception){
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI

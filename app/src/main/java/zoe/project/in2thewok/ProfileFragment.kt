@@ -192,7 +192,6 @@ class ProfileFragment : Fragment() {
         var recipeTitle: TextView = itemView.findViewById(R.id.tvRecipeTitle)
         var recipeType: TextView = itemView.findViewById(R.id.tvRecipeCuisineType)
         var recipePhoto: ImageView = itemView.findViewById(R.id.ivRecipePhoto)
-//        var cardView: CardView = itemView.findViewById(R.id.cvRecipe)
 
         init{
             itemView.setOnClickListener{
