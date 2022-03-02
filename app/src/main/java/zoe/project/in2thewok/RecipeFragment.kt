@@ -146,9 +146,9 @@ class RecipeFragment : Fragment() {
         // Set up the buttons
         builder.setPositiveButton("Send comment") { _, _ ->
             // Here you get input text from the Edittext
-            comments.add(input.text.toString())
+            comments.add(auth.currentUser?.displayName + ": " + input.text.toString())
             binding.rvComments.adapter?.notifyDataSetChanged()
-            addComment(input.text.toString())
+            addComment(auth.currentUser?.displayName + ": " + input.text.toString())
         }
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
         builder.show()
