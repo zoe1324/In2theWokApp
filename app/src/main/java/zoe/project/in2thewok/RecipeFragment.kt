@@ -26,6 +26,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [RecipeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+// TODO: Bookmark button functionality
+// TODO: Add a comment functionality, will involve maybe a dialogue box??/alertbox or add a text box below and button,
+//  will need to update the recyclerview for comments somehow?
+
 class RecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -61,6 +65,9 @@ class RecipeFragment : Fragment() {
         userID = arguments?.getString("userID")
         username = arguments?.getString("username")
         cuisineType = arguments?.getString("cuisineType")
+        if (userID != null){
+           val userCollectionRef = Firebase.firestore.collection("people").document(userID!!).collection("bookmarks")
+        }
     }
 
     override fun onCreateView(

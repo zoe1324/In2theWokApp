@@ -11,5 +11,6 @@ data class Person (
     var q4: String = "",
 //    val userPosts: MutableList<String> = mutableListOf(),
 //    val userBookmarks: List<String> = mutableListOf(),
-    val userID: String = ""
+    val userID: String = "",
+    val bookmarks: ArrayList<String> = arrayListOf()
 )
