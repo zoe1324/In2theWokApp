@@ -42,12 +42,15 @@ lateinit var auth: FirebaseAuth
  * create an instance of this fragment.
  */
 
-// TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
-// TODO: Make the list items disappear 'refresh' after posting,
 // TODO: don't make blank posts
-// TODO: Check if regex is necessary, probably not
 // TODO: Don't upload photo to Firebase before the post is done? or delete off the database if user clears it/changes photo
 // TODO: Post some actual example recipes
+// TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
+// TODO: Make the list items disappear 'refresh' after posting
+
+
+// TODO: Check if regex is necessary, probably not
+
 
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -111,9 +114,13 @@ class AddFragment : Fragment() {
         }
 
         binding.btnUploadData.setOnClickListener{
-            val post = Post(null, auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
-                remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString(), steps, binding.recipeStory.text.toString(), arrayListOf())
-            addPost(post)
+            if(binding.recipeTitle.text.toString() != "" && binding.cuisineType.text.toString() != "" && binding.recipeStory.text.toString() != "" && ingredients.isNotEmpty() && steps.isNotEmpty()){
+                val post = Post(null, auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
+                    remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString(), steps, binding.recipeStory.text.toString(), arrayListOf())
+                addPost(post)
+            } else {
+                Toast.makeText(context, "Please finish your post, photos are optional!", Toast.LENGTH_LONG).show()
+            }
         }
 
         var ingredient = ""
@@ -145,6 +152,15 @@ class AddFragment : Fragment() {
             params.height = WRAP_CONTENT
             tv.requestLayout()
             binding.etAddStep.text.clear()
+        }
+        binding.btnClearAll.setOnClickListener{
+            binding.recipeTitle.text.clear()
+            binding.cuisineType.text.clear()
+            binding.recipeStory.text.clear()
+            binding.tvUploadPhoto.text = "Add A Photo"
+            binding.imgUpload.visibility = INVISIBLE
+            binding.llSteps.removeAllViews()
+            binding.llIngredients.removeAllViews()
         }
 
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
@@ -198,9 +214,10 @@ class AddFragment : Fragment() {
                 binding.recipeTitle.text.clear()
                 binding.cuisineType.text.clear()
                 binding.recipeStory.text.clear()
-//                binding.imgUpload.setImageURI(null)
                 binding.tvUploadPhoto.text = "Add A Photo"
                 binding.imgUpload.visibility = INVISIBLE
+                binding.llSteps.removeAllViews()
+                binding.llIngredients.removeAllViews()
 //                imageUri = null
 //                remoteUri = null
             }

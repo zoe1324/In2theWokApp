@@ -337,7 +337,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
             finish()
         }
     }
-
+//
 //    override fun updateComments() {
 //
 //    }

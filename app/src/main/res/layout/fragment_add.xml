@@ -39,6 +39,13 @@
                 android:textColor="@color/okabe_ito_vermilion"
                 android:textSize="30sp" />
 
+            <Button
+                android:id="@+id/btnClearAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                android:layout_marginStart="15sp"/>
+
         </LinearLayout>
 
 

@@ -43,17 +43,17 @@ class QuestionnaireActivity : AppCompatActivity() {
             }
         }
 
-        val skipBtn = findViewById<Button>(R.id.btnSkip)
-        skipBtn.setOnClickListener {
-//            var posts = mutableListOf<String>()
-//            var bookmarks = mutableListOf<String>()
-            val person = Person(username, "You haven't told us yet!", "You haven't told us yet!","You haven't told us yet!", "You haven't told us yet!", currentUser?.uid.toString(), arrayListOf())
-            savePerson(person)
-            Intent(this, HomeActivity::class.java).also {
-                startActivity(it)
-                finish()
-            }
-        }
+//        val skipBtn = findViewById<Button>(R.id.btnSkip)
+//        skipBtn.setOnClickListener {
+////            var posts = mutableListOf<String>()
+////            var bookmarks = mutableListOf<String>()
+//            val person = Person(username, "You haven't told us yet!", "You haven't told us yet!","You haven't told us yet!", "You haven't told us yet!", currentUser?.uid.toString(), arrayListOf())
+//            savePerson(person)
+//            Intent(this, HomeActivity::class.java).also {
+//                startActivity(it)
+//                finish()
+//            }
+//        }
     }
 
     private fun savePerson(person: Person) = CoroutineScope(Dispatchers.IO).launch{

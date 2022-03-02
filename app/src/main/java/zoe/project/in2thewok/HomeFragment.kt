@@ -31,7 +31,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 
-// TODO: Recommendations(if none then random ones?)
 class HomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null

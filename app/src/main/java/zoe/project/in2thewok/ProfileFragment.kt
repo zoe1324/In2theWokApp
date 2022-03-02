@@ -1,17 +1,16 @@
 package zoe.project.in2thewok
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -45,8 +44,6 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-
-// TODO: Edit your favourites?? Or at least add some if the user skips that stage to start with
 
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -86,22 +83,12 @@ class ProfileFragment : Fragment() {
         super.onStart()
         auth = Firebase.auth
         setQuestionAnswers()
-//        posts = (activity as? HomeActivity)!!.posts
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-//    override fun onAttach(context: Context){
-//        super.onAttach(context)
-//        if (context is FragmentProfileListener){
-//            listener = (FragmentProfileListener) context
-//        } else {
-//            throw RuntimeException(context.toString() + "must implement FragmentProfileListener")
-//        }
-//    }
 
     inner class RecyclerAdapter(private val postArray: ArrayList<Post>,
                                 val layout: Int): RecyclerView.Adapter<ProfileFragment.ViewHolder>() {
@@ -112,7 +99,6 @@ class ProfileFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//            currentPost = postArray[position]
             holder.init(postArray[position])
             holder.updateItems(postArray[position])
         }
