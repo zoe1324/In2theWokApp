@@ -5,6 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -27,8 +33,17 @@ class RecipeFragment : Fragment() {
     private var _binding: FragmentRecipeBinding? = null
     private val binding get() = _binding!!
     private val postCollectionRef = Firebase.firestore.collection("posts")
+    private var ingredients: ArrayList<String> = arrayListOf()
+    private var steps: ArrayList<String> = arrayListOf()
+    private var comments: ArrayList<String> = arrayListOf()
     var recipeTitle: String? = null
     var imageURI: String? = null
+    var story: String? = null
+    var postID: String? = null
+    var userID: String? = null
+    var username: String? = null
+    var cuisineType: String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +52,15 @@ class RecipeFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         recipeTitle = arguments?.getString("title")
-        var ingredients = arrayListOf(arguments?.get("ingredients"))
+        ingredients = arguments?.getStringArrayList("ingredients") as ArrayList<String>
+        steps = arguments?.getStringArrayList("steps") as ArrayList<String>
+        comments = arguments?.getStringArrayList("comments") as ArrayList<String>
+        story = arguments?.getString("story")
         imageURI = arguments?.getString("imageURI")
+        postID = arguments?.getString("postID")
+        userID = arguments?.getString("userID")
+        username = arguments?.getString("username")
+        cuisineType = arguments?.getString("cuisineType")
     }
 
     override fun onCreateView(
@@ -49,6 +71,8 @@ class RecipeFragment : Fragment() {
         _binding = FragmentRecipeBinding.inflate(inflater, container, false)
 //        val post = displayMessage.title
         binding.tvRecipeTitle.text = recipeTitle.toString()
+        binding.tvRecipeCuisineType.text = cuisineType.toString()
+        binding.tvRecipeStory.text = story.toString()
         if (!imageURI.equals(null)) {
             Picasso.get()
                 .load(imageURI)
@@ -59,6 +83,23 @@ class RecipeFragment : Fragment() {
                 .load(R.drawable.cooking)
                 .into(binding.ivRecipePhoto)
         }
+        if(comments.isEmpty()){
+            comments.add("no comments yet!")
+        }
+        binding.rvIngredients.hasFixedSize()
+        binding.rvIngredients.layoutManager = LinearLayoutManager(context)
+        binding.rvIngredients.itemAnimator = DefaultItemAnimator()
+        binding.rvIngredients.adapter = RecyclerAdapter(ingredients, R.layout.layout_text_layout)
+
+        binding.rvSteps.hasFixedSize()
+        binding.rvSteps.layoutManager = LinearLayoutManager(context)
+        binding.rvSteps.itemAnimator = DefaultItemAnimator()
+        binding.rvSteps.adapter = RecyclerAdapter(steps, R.layout.layout_text_layout)
+
+        binding.rvComments.hasFixedSize()
+        binding.rvComments.layoutManager = LinearLayoutManager(context)
+        binding.rvComments.itemAnimator = DefaultItemAnimator()
+        binding.rvComments.adapter = RecyclerAdapter(comments, R.layout.layout_text_layout)
         return binding.root
     }
 
@@ -67,6 +108,63 @@ class RecipeFragment : Fragment() {
         _binding = null
     }
 
+    inner class RecyclerAdapter(private val stringArray: ArrayList<String>,
+                                val layout: Int): RecyclerView.Adapter<RecipeFragment.ViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//            currentPost = postArray[position]
+//            holder.init(postArray[position])
+            holder.updateItems(stringArray[position])
+        }
+
+        override fun getItemCount(): Int {
+            return stringArray.size
+        }
+
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return position
+        }
+
+    }
+
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+        var inputString: TextView = itemView.findViewById(R.id.tvString)
+//        var recipeType: TextView = itemView.findViewById(R.id.tvRecipeCuisineType)
+//        var recipePhoto: ImageView = itemView.findViewById(R.id.ivRecipePhoto)
+
+//        fun init(post: Post){
+//            itemView.setOnClickListener{
+//                Toast.makeText(itemView.context, "clicked on ${recipeTitle.text}", Toast.LENGTH_LONG).show()
+//                communicator.recipePassComm(post)
+//            }
+//        }
+
+        fun updateItems(string: String){
+            inputString.text = string
+//            recipeTitle.text = post.title.toString()
+//            recipeType.text = post.cuisineType.toString()
+//            if (post.imageURI != null) {
+//                Picasso.get()
+//                    .load(post.imageURI)
+//                    .into(recipePhoto)
+//            }
+//            else{
+//                Picasso.get()
+//                    .load(R.drawable.cooking)
+//                    .into(recipePhoto)
+//            }
+        }
+
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

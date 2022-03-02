@@ -39,9 +39,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
     val healthArticles = arrayListOf<String>()
     val posts = arrayListOf<Post>()
     private var auth = Firebase.auth
-//    private val listener = ProfileFragment.FragmentProfileListener
-
-//    override fun listener.onRecipeSent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,7 +131,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
             for (document in querySnapshot.documents) {
                 document.toObject<Post>()?.let { posts.add(it) }
             }
-//  TODO: Fix how this is styled, and navigate to the recipe 'fragment' that doesn't exist yet.
 
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
@@ -181,7 +177,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
         bundle.putString("cuisineType", post.cuisineType)
         bundle.putString("story", post.story)
         bundle.putStringArrayList("comments", arrayListOf())
-//        val transaction = this.supportFragmentManager.beginTransaction()
         recipeFragment = RecipeFragment()
         recipeFragment.arguments = bundle
         replaceFragment(R.id.frag_layout, recipeFragment)
@@ -189,6 +184,10 @@ class HomeActivity : AppCompatActivity(), Communicator{
 
     override fun updatePostList() {
         retrievePosts()
+    }
+
+    override fun updateBookmarkList() {
+        TODO("Not yet implemented")
     }
 //    fun AppCompatActivity.removeFragment(fragment: Fragment) {
 //        supportFragmentManager.doTransaction{remove(fragment)}

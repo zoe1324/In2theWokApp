@@ -19,7 +19,7 @@ private const val ARG_PARAM2 = "param2"
  */
 
 // TODO: Create a CardView layout that shows a brief on the recipe, and the first couple of comments on the post if any, and a bookmark button
-// TODO: Utilise full recipe layout that is also used for the profile page for accessing a full post
+// TODO: Utilise full recipe fragment that is also used for the profile page for accessing a full post
 
 class HomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
