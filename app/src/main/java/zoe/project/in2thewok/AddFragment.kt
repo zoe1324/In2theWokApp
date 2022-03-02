@@ -43,10 +43,7 @@ lateinit var auth: FirebaseAuth
  */
 
 // TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
-// TODO: Add some padding or make sure user can add steps more easily without collapsing the keyboard for every step (maybe set a size for empty imageview?)
-// TODO: Fix the styling a bit
 // TODO: Make the list items disappear 'refresh' after posting,
-// TODO: Add a visible scrollbar?
 // TODO: don't make blank posts
 // TODO: Check if regex is necessary, probably not
 // TODO: Don't upload photo to Firebase before the post is done? or delete off the database if user clears it/changes photo

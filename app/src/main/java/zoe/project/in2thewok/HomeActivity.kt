@@ -311,7 +311,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         bundle.putStringArrayList("steps", post.steps)
         bundle.putString("cuisineType", post.cuisineType)
         bundle.putString("story", post.story)
-        bundle.putStringArrayList("comments", arrayListOf())
+        bundle.putStringArrayList("comments", post.comments)
         recipeFragment = RecipeFragment()
         recipeFragment.arguments = bundle
         replaceFragment(R.id.frag_layout, recipeFragment)
@@ -337,6 +337,10 @@ class HomeActivity : AppCompatActivity(), Communicator{
             finish()
         }
     }
+
+//    override fun updateComments() {
+//
+//    }
 
 
 //    fun AppCompatActivity.removeFragment(fragment: Fragment) {

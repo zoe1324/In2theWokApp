@@ -6,4 +6,5 @@ interface Communicator {
     fun updateBookmarkList(bookmarksList: ArrayList<String>?)
     fun updateRecList()
     fun signOut()
+//    fun updateComments()
 }

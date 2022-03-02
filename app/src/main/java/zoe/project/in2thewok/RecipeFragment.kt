@@ -1,21 +1,22 @@
 package zoe.project.in2thewok
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -37,8 +38,6 @@ private const val ARG_PARAM2 = "param2"
  * Use the [RecipeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-// TODO: Add a comment functionality, will involve maybe a dialogue box??/alertbox or add a text box below and button,
-//  will need to update the recyclerview for comments somehow?
 
 class RecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
@@ -52,6 +51,7 @@ class RecipeFragment : Fragment() {
     private var steps: ArrayList<String> = arrayListOf()
     private var comments: ArrayList<String> = arrayListOf()
     private val personCollectionRef = Firebase.firestore.collection("people")
+    private val postCollectionRef = Firebase.firestore.collection("posts")
     var recipeTitle: String? = null
     var imageURI: String? = null
     var story: String? = null
@@ -100,9 +100,9 @@ class RecipeFragment : Fragment() {
                 .load(R.drawable.cooking)
                 .into(binding.ivRecipePhoto)
         }
-        if(comments.isEmpty()){
-            comments.add("no comments yet!")
-        }
+//        if(comments.isEmpty()){
+//            comments.add("no comments yet!")
+//        }
         binding.rvIngredients.hasFixedSize()
         binding.rvIngredients.layoutManager = LinearLayoutManager(context)
         binding.rvIngredients.itemAnimator = DefaultItemAnimator()
@@ -121,10 +121,65 @@ class RecipeFragment : Fragment() {
         binding.btnBookmarks.setOnClickListener{
             addBookmark(postID.toString())
         }
+
+        binding.btnComment.setOnClickListener{
+            showDialog()
+//            communicator.updateComments()
+        }
+
         communicator = activity as Communicator
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun showDialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder.setTitle("Write your comment below")
+
+        // Set up the input
+        val input = EditText(context)
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.hint = "Enter Text"
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        builder.setView(input)
+
+        // Set up the buttons
+        builder.setPositiveButton("Send comment") { _, _ ->
+            // Here you get input text from the Edittext
+            comments.add(input.text.toString())
+            binding.rvComments.adapter?.notifyDataSetChanged()
+            addComment(input.text.toString())
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+        builder.show()
+    }
+    private fun addComment(comment: String) = CoroutineScope(Dispatchers.IO).launch{
+        try{
+            var commentsList: ArrayList<String>?
+            var docRef: DocumentReference?
+            val querySnapshot = postCollectionRef
+                .whereEqualTo("postID", postID)
+                .get()
+                .await()
+            for(document in querySnapshot!!.documents){
+                val post = document.toObject<Post>()
+                commentsList = post?.comments
+                commentsList?.add(comment)
+                docRef = Firebase.firestore.collection("posts").document(document.id)
+                docRef.update("comments", commentsList)
+//                communicator.updateBookmarkList(commentsList)
+            }
+            withContext(Dispatchers.Main){
+                Toast.makeText(context, "Successfully added comment", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception){
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                println(e.message)
+            }
+        }
+
+    }
     private fun addBookmark(postID : String) = CoroutineScope(Dispatchers.IO).launch{
         try{
             var bookmarksList: ArrayList<String>?
@@ -167,8 +222,6 @@ class RecipeFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//            currentPost = postArray[position]
-//            holder.init(postArray[position])
             holder.updateItems(stringArray[position])
         }
 
@@ -188,30 +241,9 @@ class RecipeFragment : Fragment() {
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         var inputString: TextView = itemView.findViewById(R.id.tvString)
-//        var recipeType: TextView = itemView.findViewById(R.id.tvRecipeCuisineType)
-//        var recipePhoto: ImageView = itemView.findViewById(R.id.ivRecipePhoto)
-
-//        fun init(post: Post){
-//            itemView.setOnClickListener{
-//                Toast.makeText(itemView.context, "clicked on ${recipeTitle.text}", Toast.LENGTH_LONG).show()
-//                communicator.recipePassComm(post)
-//            }
-//        }
 
         fun updateItems(string: String){
             inputString.text = string
-//            recipeTitle.text = post.title.toString()
-//            recipeType.text = post.cuisineType.toString()
-//            if (post.imageURI != null) {
-//                Picasso.get()
-//                    .load(post.imageURI)
-//                    .into(recipePhoto)
-//            }
-//            else{
-//                Picasso.get()
-//                    .load(R.drawable.cooking)
-//                    .into(recipePhoto)
-//            }
         }
 
     }

@@ -54,7 +54,7 @@ class RegisterActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.tePassword).text.toString()
         if(email.isNotEmpty() && password.isNotEmpty()){
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                CoroutineScope(Dispatchers.IO).launch { //learn what this means??
+                CoroutineScope(Dispatchers.IO).launch {
                     try { //to register the user
                         auth.createUserWithEmailAndPassword(email, password).await()
                         switchToGetStarted()

@@ -58,11 +58,6 @@ class ProfileFragment : Fragment() {
     private var posts = arrayListOf<Post>()
     private lateinit var communicator: Communicator
     private var auth = Firebase.auth
-//    private lateinit var currentPost: Post
-
-//    interface FragmentProfileListener{
-//        fun onRecipeSent(post: Post)
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
