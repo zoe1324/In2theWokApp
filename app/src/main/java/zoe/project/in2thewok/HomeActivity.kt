@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         infoFragment = InfoFragment()
 
         //Hardcoded ids for functionality
-        recs = arrayListOf("NYBaiKg4nkosY6PYBx4x","DvI17nLSULQhmKrbsQmA","vjX6h3jA0QHO48GAgFz4", "ZUFGJjKZy8fZQz6KuPrq", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
+        recs = arrayListOf("1lA1Z8C9xmUm8eqK7Abh","cZ96WPzc85g6ZuoPhg0j","iY8j4vktKX9MrnABO0lx")
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -177,16 +177,15 @@ class HomeActivity : AppCompatActivity(), Communicator{
             recPosts.clear()
 //            for(rec in recs){
                 val querySnapshotQ1 = postCollectionRef
-                    .whereArrayContains("ingredients", q1.toString())
+                    .whereEqualTo("cuisineType".lowercase(), q1.toString().lowercase())
                     .get()
                     .await()
 
                 for (document in querySnapshotQ1.documents) {
-
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
                 val querySnapshotQ2 = postCollectionRef
-                    .whereArrayContains("ingredients", q2.toString())
+                    .whereEqualTo("cuisineType".lowercase(), q2.toString().lowercase())
                     .get()
                     .await()
 
@@ -194,7 +193,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
                 val querySnapshotQ3 = postCollectionRef
-                    .whereArrayContains("ingredients", q3.toString())
+                    .whereEqualTo("cuisineType".lowercase(), q3.toString().lowercase())
                     .get()
                     .await()
 
@@ -202,7 +201,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
                 val querySnapshotQ4 = postCollectionRef
-                    .whereEqualTo("cuisineType", q4.toString())
+                    .whereEqualTo("cuisineType", q4.toString().lowercase())
                     .get()
                     .await()
 
@@ -211,7 +210,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
                 }
             if(recPosts.isEmpty()){
                 for(rec in recs){
-                    var querySnapshot = postCollectionRef
+                    val querySnapshot = postCollectionRef
                         .whereEqualTo("postID", rec)
                         .get()
                         .await()

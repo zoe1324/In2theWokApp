@@ -113,7 +113,7 @@ class AddFragment : Fragment() {
         binding.btnUploadData.setOnClickListener{
             if(binding.recipeTitle.text.toString() != "" && binding.cuisineType.text.toString() != "" && binding.recipeStory.text.toString() != "" && ingredients.isNotEmpty() && steps.isNotEmpty()){
                 val post = Post(null, auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
-                    remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString(), steps, binding.recipeStory.text.toString(), arrayListOf())
+                    remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString().lowercase(), steps, binding.recipeStory.text.toString(), arrayListOf())
                 addPost(post)
             } else {
                 Toast.makeText(context, "Please finish your post, photos are optional!", Toast.LENGTH_LONG).show()
@@ -215,6 +215,8 @@ class AddFragment : Fragment() {
                 binding.imgUpload.visibility = INVISIBLE
                 binding.llSteps.removeAllViews()
                 binding.llIngredients.removeAllViews()
+                ingredients.removeAll(ingredients)
+                steps.removeAll(steps)
 //                imageUri = null
 //                remoteUri = null
             }
