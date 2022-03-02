@@ -22,7 +22,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.ActivityHomeBinding
 import java.lang.Exception
-
+// TODO: Fix some back button functionality that lets you press back before completing registration properly
 class HomeActivity : AppCompatActivity(), Communicator{
 
     private lateinit var binding: ActivityHomeBinding

@@ -49,6 +49,7 @@ private const val ARG_PARAM2 = "param2"
 // TODO: Look at explanation of recyclerview fix
 // TODO: Add a 'My Bookmarks' view to switch between posts & bookmarked posts
 // TODO: Show user they have no bookmarks yet if there are none, and not just a blank screen?
+// TODO: Edit your favourites?? Or at least add some if the user skips that stage to start with
 
 class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters

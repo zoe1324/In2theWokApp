@@ -18,7 +18,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 
-// TODO: Create a CardView layout that shows a brief on the recipe, and the first couple of comments on the post if any, and a bookmark button
+// TODO: Create a CardView layout that shows a brief on the recipe based on recommendations(if none then random ones?), and the first couple of comments on the post if any, and a bookmark button
 // TODO: Utilise full recipe fragment that is also used for the profile page for accessing a full post
 
 class HomeFragment : Fragment() {
