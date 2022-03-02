@@ -39,7 +39,7 @@ class QuestionnaireActivity : AppCompatActivity() {
             val q4 = findViewById<EditText>(R.id.a4).text.toString()
 //            var posts = mutableListOf<String>()
 //            var bookmarks = mutableListOf<String>()
-            val person = Person(username, q1, q2, q3, q4, currentUser?.uid.toString())
+            val person = Person(username, q1, q2, q3, q4, currentUser?.uid.toString(), arrayListOf())
             savePerson(person)
             Intent(this, HomeActivity::class.java).also {
                 startActivity(it)

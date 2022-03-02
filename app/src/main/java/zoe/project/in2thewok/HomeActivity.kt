@@ -3,15 +3,13 @@ package zoe.project.in2thewok
 //import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -32,17 +30,18 @@ class HomeActivity : AppCompatActivity(), Communicator{
     private lateinit var articleFragment: ArticleFragment
     private lateinit var infoFragment: InfoFragment
     private lateinit var recipeFragment: RecipeFragment
+    private lateinit var auth: FirebaseAuth
     private val articleCollectionRef = Firebase.firestore.collection("articles").document("fun").collection("fun_facts")
     private val healthArticleCollectionRef = Firebase.firestore.collection("articles").document("health").collection("health_articles")
     private val postCollectionRef = Firebase.firestore.collection("posts")
+    private val personCollectionRef = Firebase.firestore.collection("people")
     val articles = arrayListOf<String>()
     val healthArticles = arrayListOf<String>()
     val posts = arrayListOf<Post>()
     var recPosts = arrayListOf<Post>()
     var recs = arrayListOf<String>()
-    var bookmarked = arrayListOf<String>()
+    var bookmarked : ArrayList<String>? = arrayListOf()
     var bookmarkedPosts = arrayListOf<Post>()
-    private var auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +52,10 @@ class HomeActivity : AppCompatActivity(), Communicator{
         addFragment = AddFragment()
         articleFragment = ArticleFragment()
         infoFragment = InfoFragment()
+
+        //Hardcoded ids for functionality
         recs = arrayListOf("DvI17nLSULQhmKrbsQmA","NYBaiKg4nkosY6PYBx4x","ZUFGJjKZy8fZQz6KuPrq", "vjX6h3jA0QHO48GAgFz4", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
-        bookmarked = arrayListOf("NYBaiKg4nkosY6PYBx4x","DvI17nLSULQhmKrbsQmA","vjX6h3jA0QHO48GAgFz4", "ZUFGJjKZy8fZQz6KuPrq", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
+//        bookmarked = arrayListOf("NYBaiKg4nkosY6PYBx4x","DvI17nLSULQhmKrbsQmA","vjX6h3jA0QHO48GAgFz4", "ZUFGJjKZy8fZQz6KuPrq", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -63,7 +64,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         retrieveFunArticles()
         retrieveHealthArticles()
         retrievePosts()
-        retrieveRecsAndBookmarkPosts()
+        initRecsAndBookmarkPosts()
 
 
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -148,7 +149,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
-    private fun retrieveRecsAndBookmarkPosts() = CoroutineScope(Dispatchers.IO).launch {
+    private fun initRecsAndBookmarkPosts() = CoroutineScope(Dispatchers.IO).launch {
         try{
             recPosts.clear()
             for(rec in recs){
@@ -161,8 +162,21 @@ class HomeActivity : AppCompatActivity(), Communicator{
                 }
             }
             bookmarkedPosts.clear()
-            for(bookmark in bookmarked){
-                val querySnapshot = postCollectionRef
+//            var bookmarksList: ArrayList<String>?
+            var docRef: DocumentReference?
+            var querySnapshot = personCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid.toString())
+                .get()
+                .await()
+            for(document in querySnapshot!!.documents){
+                val person = document.toObject<Person>()
+                bookmarked = person?.bookmarks
+//                bookmarksList?.add(postID)
+//                docRef = document.getDocumentReference("bookmarks")
+//                docRef?.update("bookmarks", bookmarksList)
+            }
+            for(bookmark in bookmarked!!){
+                querySnapshot = postCollectionRef
                     .whereEqualTo("postID", bookmark)
                     .get()
                     .await()
@@ -178,16 +192,32 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
-//    private fun retrieveBookmarkedPosts() = CoroutineScope(Dispatchers.IO).launch {
-//        try{
-//
-//            replaceFragment(R.id.frag_layout, homeFragment)
-//        } catch (e: Exception) {
-//            withContext(Dispatchers.Main) {
-//                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
-//            }
-//        }
-//    }
+    private fun retrieveBookmarkedPosts() = CoroutineScope(Dispatchers.IO).launch {
+        try{
+            bookmarkedPosts.clear()
+            var querySnapshot = personCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid.toString())
+                .get()
+                .await()
+            for(document in querySnapshot!!.documents){
+                val person = document.toObject<Person>()
+                bookmarked = person?.bookmarks
+            }
+            for(bookmark in bookmarked!!){
+                querySnapshot = postCollectionRef
+                    .whereEqualTo("postID", bookmark)
+                    .get()
+                    .await()
+                for (document in querySnapshot.documents) {
+                    document.toObject<Post>()?.let { bookmarkedPosts.add(it) }
+                }
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     override fun onStart() {
         super.onStart()
@@ -232,8 +262,9 @@ class HomeActivity : AppCompatActivity(), Communicator{
         retrievePosts()
     }
 
-    override fun updateBookmarkList() {
-//        retrieveBookmarkedPosts()
+    override fun updateBookmarkList(bookmarksList: ArrayList<String>?) {
+        bookmarked = bookmarksList
+        retrieveBookmarkedPosts()
     }
 
     override fun updateRecList() {

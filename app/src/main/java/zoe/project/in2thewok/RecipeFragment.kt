@@ -11,9 +11,20 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentRecipeBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,14 +43,16 @@ private const val ARG_PARAM2 = "param2"
 
 class RecipeFragment : Fragment() {
     // TODO: Rename and change types of parameters
+    private lateinit var communicator: Communicator
     private var param1: String? = null
     private var param2: String? = null
     private var _binding: FragmentRecipeBinding? = null
     private val binding get() = _binding!!
-    private val postCollectionRef = Firebase.firestore.collection("posts")
+//    private val postCollectionRef = Firebase.firestore.collection("posts")
     private var ingredients: ArrayList<String> = arrayListOf()
     private var steps: ArrayList<String> = arrayListOf()
     private var comments: ArrayList<String> = arrayListOf()
+    private val personCollectionRef = Firebase.firestore.collection("people")
     var recipeTitle: String? = null
     var imageURI: String? = null
     var story: String? = null
@@ -55,6 +68,7 @@ class RecipeFragment : Fragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        auth = Firebase.auth
         recipeTitle = arguments?.getString("title")
         ingredients = arguments?.getStringArrayList("ingredients") as ArrayList<String>
         steps = arguments?.getStringArrayList("steps") as ArrayList<String>
@@ -65,9 +79,6 @@ class RecipeFragment : Fragment() {
         userID = arguments?.getString("userID")
         username = arguments?.getString("username")
         cuisineType = arguments?.getString("cuisineType")
-        if (userID != null){
-           val userCollectionRef = Firebase.firestore.collection("people").document(userID!!).collection("bookmarks")
-        }
     }
 
     override fun onCreateView(
@@ -107,7 +118,40 @@ class RecipeFragment : Fragment() {
         binding.rvComments.layoutManager = LinearLayoutManager(context)
         binding.rvComments.itemAnimator = DefaultItemAnimator()
         binding.rvComments.adapter = RecyclerAdapter(comments, R.layout.layout_text_layout)
+
+        binding.btnBookmarks.setOnClickListener{
+            addBookmark(postID.toString())
+        }
+        communicator = activity as Communicator
         return binding.root
+    }
+
+    private fun addBookmark(postID : String) = CoroutineScope(Dispatchers.IO).launch{
+        try{
+            var bookmarksList: ArrayList<String>?
+            var docRef: DocumentReference?
+            val querySnapshot = personCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid.toString())
+                .get()
+                .await()
+            for(document in querySnapshot!!.documents){
+                val person = document.toObject<Person>()
+                bookmarksList = person?.bookmarks
+                bookmarksList?.add(postID)
+                docRef = Firebase.firestore.collection("people").document(document.id)
+                docRef.update("bookmarks", bookmarksList)
+                communicator.updateBookmarkList(bookmarksList)
+            }
+            withContext(Dispatchers.Main){
+                Toast.makeText(context, "Successfully added bookmark.", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception){
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                println(e.message)
+            }
+        }
+
     }
 
     override fun onDestroyView() {

@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,18 +30,13 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 
-// TODO: Create a CardView layout that shows a brief on the recipe based on recommendations(if none then random ones?), and the first couple of comments on the post if any, and a bookmark button
-// TODO: Utilise full recipe fragment that is also used for the profile page for accessing a full post
-// TODO: Add a 'My Bookmarks' view to switch between posts & bookmarked posts
-// TODO: Show user they have no bookmarks yet if there are none, and not just a blank screen?
+// TODO: Recommendations(if none then random ones?)
 class HomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-//    private var recs = ArrayList<String>()
-//    private var bookmarks = ArrayList<String>()
     private var recs = arrayListOf<Post>()
     private var bookmarked = arrayListOf<Post>()
     private lateinit var communicator: Communicator
@@ -57,18 +54,19 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        auth = Firebase.auth
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.rvRecs.hasFixedSize()
         binding.rvRecs.layoutManager = LinearLayoutManager(context)
         binding.rvRecs.itemAnimator = DefaultItemAnimator()
         recs = (activity as? HomeActivity)!!.recPosts
         binding.rvRecs.adapter = RecyclerAdapter(recs, R.layout.layout_recipe)
-        communicator = activity as Communicator
         bookmarked = (activity as? HomeActivity)!!.bookmarkedPosts
         binding.rvBookmarks.hasFixedSize()
         binding.rvBookmarks.layoutManager = LinearLayoutManager(context)
         binding.rvBookmarks.itemAnimator = DefaultItemAnimator()
         binding.rvBookmarks.adapter = RecyclerAdapter(bookmarked, R.layout.layout_recipe)
+        communicator = activity as Communicator
         return binding.root
     }
 

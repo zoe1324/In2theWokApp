@@ -46,7 +46,6 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 
-// TODO: Look at explanation of recyclerview fix
 // TODO: Edit your favourites?? Or at least add some if the user skips that stage to start with
 
 class ProfileFragment : Fragment() {
