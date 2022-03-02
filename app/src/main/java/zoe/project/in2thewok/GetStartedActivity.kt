@@ -81,7 +81,11 @@ class GetStartedActivity : AppCompatActivity() {
     private fun startQuestionnaire(){
         Intent(this, QuestionnaireActivity::class.java).also {
             startActivity(it)
+            finish()
         }
+    }
+
+    override fun onBackPressed() {
     }
 
 //    private fun regUsername(){

@@ -37,7 +37,6 @@ private const val ARG_PARAM2 = "param2"
  * Use the [RecipeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-// TODO: Bookmark button functionality
 // TODO: Add a comment functionality, will involve maybe a dialogue box??/alertbox or add a text box below and button,
 //  will need to update the recyclerview for comments somehow?
 

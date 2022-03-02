@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -40,6 +41,8 @@ class HomeFragment : Fragment() {
     private var recs = arrayListOf<Post>()
     private var bookmarked = arrayListOf<Post>()
     private lateinit var communicator: Communicator
+    //Declaring an instance of FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +69,14 @@ class HomeFragment : Fragment() {
         binding.rvBookmarks.layoutManager = LinearLayoutManager(context)
         binding.rvBookmarks.itemAnimator = DefaultItemAnimator()
         binding.rvBookmarks.adapter = RecyclerAdapter(bookmarked, R.layout.layout_recipe)
+//        binding.rvRecs.scrollBarSize = 4
+//        binding.rvBookmarks.scrollBarSize = 4
         communicator = activity as Communicator
+
+        binding.btnLogout.setOnClickListener{
+            auth.signOut()
+            communicator.signOut()
+        }
         return binding.root
     }
 

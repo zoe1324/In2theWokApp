@@ -1,6 +1,7 @@
 package zoe.project.in2thewok
 
 //import android.content.Intent
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -9,7 +10,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -20,9 +20,8 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.ActivityHomeBinding
 import java.lang.Exception
-// TODO: Fix some back button functionality that lets you press back before completing registration properly
-class HomeActivity : AppCompatActivity(), Communicator{
 
+class HomeActivity : AppCompatActivity(), Communicator{
     private lateinit var binding: ActivityHomeBinding
     private lateinit var homeFragment: HomeFragment
     private lateinit var profileFragment: ProfileFragment
@@ -42,6 +41,11 @@ class HomeActivity : AppCompatActivity(), Communicator{
     var recs = arrayListOf<String>()
     var bookmarked : ArrayList<String>? = arrayListOf()
     var bookmarkedPosts = arrayListOf<Post>()
+    var person: Person? = null
+    var q1: String? = null
+    var q2: String? = null
+    var q3: String? = null
+    var q4: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +58,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         infoFragment = InfoFragment()
 
         //Hardcoded ids for functionality
-        recs = arrayListOf("DvI17nLSULQhmKrbsQmA","NYBaiKg4nkosY6PYBx4x","ZUFGJjKZy8fZQz6KuPrq", "vjX6h3jA0QHO48GAgFz4", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
-//        bookmarked = arrayListOf("NYBaiKg4nkosY6PYBx4x","DvI17nLSULQhmKrbsQmA","vjX6h3jA0QHO48GAgFz4", "ZUFGJjKZy8fZQz6KuPrq", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
+        recs = arrayListOf("NYBaiKg4nkosY6PYBx4x","DvI17nLSULQhmKrbsQmA","vjX6h3jA0QHO48GAgFz4", "ZUFGJjKZy8fZQz6KuPrq", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -64,7 +67,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         retrieveFunArticles()
         retrieveHealthArticles()
         retrievePosts()
-        initRecsAndBookmarkPosts()
+        retrievePersonAnswers()
 
 
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -93,7 +96,27 @@ class HomeActivity : AppCompatActivity(), Communicator{
             true
         }
     }
+    private fun retrievePersonAnswers() = CoroutineScope(Dispatchers.IO).launch {
+        try{
+            var querySnapshot = personCollectionRef
+                .whereEqualTo("userID", auth.currentUser?.uid.toString())
+                .get()
+                .await()
+            for(document in querySnapshot!!.documents){
+                person = document.toObject<Person>()
+                q1 = person?.q1.toString()
+                q2 = person?.q2.toString()
+                q3 = person?.q3.toString()
+                q4 = person?.q4.toString()
+            }
+            initRecsAndBookmarkPosts()
+        } catch(e: Exception){
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
 
+    }
     private fun retrieveFunArticles() = CoroutineScope(Dispatchers.IO).launch{
         try {
             val querySnapshot = articleCollectionRef
@@ -152,24 +175,61 @@ class HomeActivity : AppCompatActivity(), Communicator{
     private fun initRecsAndBookmarkPosts() = CoroutineScope(Dispatchers.IO).launch {
         try{
             recPosts.clear()
-            for(rec in recs){
-                val querySnapshot = postCollectionRef
-                    .whereEqualTo("postID", rec)
+//            for(rec in recs){
+                val querySnapshotQ1 = postCollectionRef
+                    .whereArrayContains("ingredients", q1.toString())
                     .get()
                     .await()
-                for (document in querySnapshot.documents) {
+
+                for (document in querySnapshotQ1.documents) {
+
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
+                val querySnapshotQ2 = postCollectionRef
+                    .whereArrayContains("ingredients", q2.toString())
+                    .get()
+                    .await()
+
+                for (document in querySnapshotQ2.documents) {
+                    document.toObject<Post>()?.let { recPosts.add(it) }
+                }
+                val querySnapshotQ3 = postCollectionRef
+                    .whereArrayContains("ingredients", q3.toString())
+                    .get()
+                    .await()
+
+                for (document in querySnapshotQ3.documents) {
+                    document.toObject<Post>()?.let { recPosts.add(it) }
+                }
+                val querySnapshotQ4 = postCollectionRef
+                    .whereEqualTo("cuisineType", q4.toString())
+                    .get()
+                    .await()
+
+                for (document in querySnapshotQ4.documents) {
+                    document.toObject<Post>()?.let { recPosts.add(it) }
+                }
+            if(recPosts.isEmpty()){
+                for(rec in recs){
+                    var querySnapshot = postCollectionRef
+                        .whereEqualTo("postID", rec)
+                        .get()
+                        .await()
+                    for(document in querySnapshot.documents){
+                        document.toObject<Post>()?.let{recPosts.add(it)}
+                    }
+
+                }
             }
+//            }
+
             bookmarkedPosts.clear()
-//            var bookmarksList: ArrayList<String>?
-            var docRef: DocumentReference?
             var querySnapshot = personCollectionRef
                 .whereEqualTo("userID", auth.currentUser?.uid.toString())
                 .get()
                 .await()
             for(document in querySnapshot!!.documents){
-                val person = document.toObject<Person>()
+                person = document.toObject<Person>()
                 bookmarked = person?.bookmarks
 //                bookmarksList?.add(postID)
 //                docRef = document.getDocumentReference("bookmarks")
@@ -270,6 +330,14 @@ class HomeActivity : AppCompatActivity(), Communicator{
     override fun updateRecList() {
 //        retrieveRecPosts()
     }
+
+    override fun signOut() {
+        Intent(this, MainActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
+    }
+
 
 //    fun AppCompatActivity.removeFragment(fragment: Fragment) {
 //        supportFragmentManager.doTransaction{remove(fragment)}
