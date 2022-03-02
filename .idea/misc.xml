@@ -11,6 +11,7 @@
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_baseline_lunch_dining_24.xml" value="0.1035" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.1285" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_dynamic_feed.xml" value="0.1035" />
+        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_home.xml" value="0.217" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_info.xml" value="0.1035" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_launcher_background.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/drawable/ic_person.xml" value="0.165" />
@@ -31,11 +32,11 @@
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_articles_fun_facts.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_feed.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_first.xml" value="0.1" />
-        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_home.xml" value="0.6" />
+        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_home.xml" value="0.4" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_info.xml" value="0.2" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_new_post.xml" value="0.10925925925925926" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_profile.xml" value="0.1" />
-        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_recipe.xml" value="0.2" />
+        <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/fragment_recipe.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/layout_full_recipe.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/layout_preview.xml" value="0.1" />
         <entry key="..\:/Users/zoepe/AndroidStudioProjects/PrototypeCS408/app/src/main/res/layout/layout_recipe.xml" value="0.1" />

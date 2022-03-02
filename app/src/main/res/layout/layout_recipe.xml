@@ -36,6 +36,7 @@
 
                 <TextView
                     android:id="@+id/tvRecipeDetails"
+                    android:fontFamily="@font/roboto_light"
                     android:layout_width="236dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="16dp"

@@ -38,6 +38,10 @@ class HomeActivity : AppCompatActivity(), Communicator{
     val articles = arrayListOf<String>()
     val healthArticles = arrayListOf<String>()
     val posts = arrayListOf<Post>()
+    var recPosts = arrayListOf<Post>()
+    var recs = arrayListOf<String>()
+    var bookmarked = arrayListOf<String>()
+    var bookmarkedPosts = arrayListOf<Post>()
     private var auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,16 +53,18 @@ class HomeActivity : AppCompatActivity(), Communicator{
         addFragment = AddFragment()
         articleFragment = ArticleFragment()
         infoFragment = InfoFragment()
+        recs = arrayListOf("DvI17nLSULQhmKrbsQmA","NYBaiKg4nkosY6PYBx4x","ZUFGJjKZy8fZQz6KuPrq", "vjX6h3jA0QHO48GAgFz4", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
+        bookmarked = arrayListOf("NYBaiKg4nkosY6PYBx4x","DvI17nLSULQhmKrbsQmA","vjX6h3jA0QHO48GAgFz4", "ZUFGJjKZy8fZQz6KuPrq", "wfJvMMKGTqOh9sduTcQq", "wpMnkDNc661Zj23EgfaQ")
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(R.id.frag_layout, homeFragment)
-
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
         retrieveFunArticles()
         retrieveHealthArticles()
         retrievePosts()
+        retrieveRecsAndBookmarkPosts()
+
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
@@ -120,6 +126,10 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+//    private fun refreshRecommendedPosts() = CoroutineScope(Dispatchers.IO).launch{
+//        recs.clear()
+//    }
+
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
 
         try {
@@ -131,7 +141,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
             for (document in querySnapshot.documents) {
                 document.toObject<Post>()?.let { posts.add(it) }
             }
-
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
@@ -139,11 +148,51 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+    private fun retrieveRecsAndBookmarkPosts() = CoroutineScope(Dispatchers.IO).launch {
+        try{
+            recPosts.clear()
+            for(rec in recs){
+                val querySnapshot = postCollectionRef
+                    .whereEqualTo("postID", rec)
+                    .get()
+                    .await()
+                for (document in querySnapshot.documents) {
+                    document.toObject<Post>()?.let { recPosts.add(it) }
+                }
+            }
+            bookmarkedPosts.clear()
+            for(bookmark in bookmarked){
+                val querySnapshot = postCollectionRef
+                    .whereEqualTo("postID", bookmark)
+                    .get()
+                    .await()
+                for (document in querySnapshot.documents) {
+                    document.toObject<Post>()?.let { bookmarkedPosts.add(it) }
+                }
+            }
+            replaceFragment(R.id.frag_layout, homeFragment)
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+//    private fun retrieveBookmarkedPosts() = CoroutineScope(Dispatchers.IO).launch {
+//        try{
+//
+//            replaceFragment(R.id.frag_layout, homeFragment)
+//        } catch (e: Exception) {
+//            withContext(Dispatchers.Main) {
+//                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
+//            }
+//        }
+//    }
+
     override fun onStart() {
         super.onStart()
-//        supportActionBar?.title = "Home"
-//        supportActionBar?.title = "Hello " + Firebase.auth.currentUser?.displayName
         supportActionBar?.hide()
+
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
     }
@@ -155,10 +204,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
     ) {
         beginTransaction().func().commit()
     }
-
-//    fun AppCompatActivity.addFragment(frameId: Int, fragment: Fragment){
-//        supportFragmentManager.doTransaction { add(frameId, fragment) }
-//    }
 
 
     fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
@@ -182,13 +227,19 @@ class HomeActivity : AppCompatActivity(), Communicator{
         replaceFragment(R.id.frag_layout, recipeFragment)
     }
 
+
     override fun updatePostList() {
         retrievePosts()
     }
 
     override fun updateBookmarkList() {
-        TODO("Not yet implemented")
+//        retrieveBookmarkedPosts()
     }
+
+    override fun updateRecList() {
+//        retrieveRecPosts()
+    }
+
 //    fun AppCompatActivity.removeFragment(fragment: Fragment) {
 //        supportFragmentManager.doTransaction{remove(fragment)}
 //    }

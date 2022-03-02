@@ -4,4 +4,5 @@ interface Communicator {
     fun recipePassComm(post: Post)
     fun updatePostList()
     fun updateBookmarkList()
+    fun updateRecList()
 }
