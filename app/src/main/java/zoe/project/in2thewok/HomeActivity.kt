@@ -177,7 +177,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
             recPosts.clear()
 //            for(rec in recs){
                 val querySnapshotQ1 = postCollectionRef
-                    .whereEqualTo("cuisineType".lowercase(), q1.toString().lowercase())
+                    .whereEqualTo("cuisineType", q1.toString().lowercase())
                     .get()
                     .await()
 
@@ -185,7 +185,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
                 val querySnapshotQ2 = postCollectionRef
-                    .whereEqualTo("cuisineType".lowercase(), q2.toString().lowercase())
+                    .whereEqualTo("cuisineType", q2.toString().lowercase())
                     .get()
                     .await()
 
@@ -193,7 +193,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
                 val querySnapshotQ3 = postCollectionRef
-                    .whereEqualTo("cuisineType".lowercase(), q3.toString().lowercase())
+                    .whereEqualTo("cuisineType", q3.toString().lowercase())
                     .get()
                     .await()
 
