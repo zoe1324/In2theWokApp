@@ -124,7 +124,7 @@ class ProfileFragment : Fragment() {
 
        fun init(post: Post){
             itemView.setOnClickListener{
-                Toast.makeText(itemView.context, "clicked on ${recipeTitle.text}", Toast.LENGTH_LONG).show()
+//                Toast.makeText(itemView.context, "clicked on ${recipeTitle.text}", Toast.LENGTH_LONG).show()
                 communicator.recipePassComm(post)
             }
         }

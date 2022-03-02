@@ -7,7 +7,7 @@
         android:id="@+id/clProfile"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_marginBottom="5sp"
+        android:layout_marginBottom="50sp"
         tools:context=".ProfileFragment">
 
         <LinearLayout
