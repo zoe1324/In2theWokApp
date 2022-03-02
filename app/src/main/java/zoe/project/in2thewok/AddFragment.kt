@@ -42,12 +42,9 @@ lateinit var auth: FirebaseAuth
  * create an instance of this fragment.
  */
 
-// TODO: don't make blank posts
 // TODO: Don't upload photo to Firebase before the post is done? or delete off the database if user clears it/changes photo
-// TODO: Post some actual example recipes
-// TODO: Add a clear all button or something if the user makes a mistake on the ingredients/steps or doesn't want a photo
-// TODO: Make the list items disappear 'refresh' after posting
 
+// TODO: Post some actual example recipes
 
 // TODO: Check if regex is necessary, probably not
 
