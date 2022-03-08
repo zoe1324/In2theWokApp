@@ -76,6 +76,7 @@
                 android:id="@+id/teUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toTopOf="@id/btnGetStarted"
                 app:layout_constraintEnd_toEndOf="@id/white_container"
                 app:layout_constraintStart_toStartOf="@id/white_container"
