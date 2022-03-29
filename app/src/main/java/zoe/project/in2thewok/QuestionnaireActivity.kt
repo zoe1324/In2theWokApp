@@ -17,6 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+@Suppress("EmptyFunctionBlock", "TooGenericExceptionCaught")
+
 class QuestionnaireActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -32,10 +34,6 @@ class QuestionnaireActivity : AppCompatActivity() {
         val username = currentUser?.displayName.toString().trim()
 
         submitBtn.setOnClickListener{
-
-// TODO: Consider a question list for ease of maintainability??
-//  But adding new questions means UI changes, maybe a for each question?
-
             val q1 = findViewById<EditText>(R.id.a1).text.toString().trim()
             val q2 = findViewById<EditText>(R.id.a2).text.toString().trim()
             val q3 = findViewById<EditText>(R.id.a3).text.toString().trim()

@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+@Suppress("TooGenericExceptionCaught")
+
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -79,5 +81,4 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(it)
         }
     }
-
 }

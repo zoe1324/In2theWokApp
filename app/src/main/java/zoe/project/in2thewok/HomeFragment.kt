@@ -20,11 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import zoe.project.in2thewok.databinding.FragmentHomeBinding
 import zoe.project.in2thewok.databinding.FragmentProfileBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  * Use the [HomeFragment.newInstance] factory method to
@@ -32,23 +27,12 @@ import zoe.project.in2thewok.databinding.FragmentProfileBinding
  */
 
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private var recs = arrayListOf<Post>()
     private var bookmarked = arrayListOf<Post>()
     private lateinit var communicator: Communicator
     private lateinit var auth: FirebaseAuth
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,14 +51,13 @@ class HomeFragment : Fragment() {
         binding.rvBookmarks.layoutManager = LinearLayoutManager(context)
         binding.rvBookmarks.itemAnimator = DefaultItemAnimator()
         binding.rvBookmarks.adapter = RecyclerAdapter(bookmarked, R.layout.layout_recipe)
-//        binding.rvRecs.scrollBarSize = 4
-//        binding.rvBookmarks.scrollBarSize = 4
         communicator = activity as Communicator
 
         binding.btnLogout.setOnClickListener{
             auth.signOut()
             communicator.signOut()
         }
+
         return binding.root
     }
 
@@ -134,18 +117,5 @@ class HomeFragment : Fragment() {
                     .into(recipePhoto)
             }
         }
-
     }
-
-//    companion object {
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            HomeFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
 }

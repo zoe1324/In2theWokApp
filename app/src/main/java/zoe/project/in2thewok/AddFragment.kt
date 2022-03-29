@@ -25,6 +25,8 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
 
+@Suppress("WildcardImport", "TooGenericExceptionCaught")
+
 private lateinit var communicator: Communicator
 lateinit var auth: FirebaseAuth
 
@@ -65,7 +67,7 @@ class AddFragment : Fragment() {
         try {
             val ref = postCollectionRef.add(post)
                 .await()
-            val doc = ref.update("postID", ref.id)
+            ref.update("postID", ref.id)
             withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
                 Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
                 clearAll()
@@ -112,7 +114,7 @@ class AddFragment : Fragment() {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         communicator = activity as Communicator
 
-        if (!remoteUri.equals(null)) {
+        if (remoteUri != null) {
             Picasso.get()
                 .load(remoteUri)
                 .into(binding.imgUpload)
@@ -129,7 +131,9 @@ class AddFragment : Fragment() {
         binding.btnUploadData.setOnClickListener{
             if(!textFieldsEmpty() && ingredients.isNotEmpty() && steps.isNotEmpty()){
                 val post = Post(null, auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
-                    remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString().lowercase(), steps, binding.recipeStory.text.toString(), arrayListOf())
+                    remoteUri, null, binding.recipeTitle.text.toString(), ingredients,
+                    binding.cuisineType.text.toString().lowercase(),
+                    steps, binding.recipeStory.text.toString(), arrayListOf())
                 addPost(post)
             } else {
                 Toast.makeText(context, "Please finish your post, photos are optional!", Toast.LENGTH_LONG).show()
@@ -213,7 +217,9 @@ class AddFragment : Fragment() {
     }
 
     private fun textFieldsEmpty() : Boolean{
-        if (binding.recipeTitle.text.toString() != "" && binding.cuisineType.text.toString() != "" && binding.recipeStory.text.toString() != "" ){
+        if (binding.recipeTitle.text.toString() != ""
+            && binding.cuisineType.text.toString() != ""
+            && binding.recipeStory.text.toString() != "" ){
             return false
         }
         return true

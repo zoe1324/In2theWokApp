@@ -12,10 +12,7 @@ import io.github.ponnamkarthik.richlinkpreview.RichLinkView
 import io.github.ponnamkarthik.richlinkpreview.ViewListener
 import zoe.project.in2thewok.databinding.FragmentArticleBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
+@Suppress("EmptyFunctionBlock")
 
 /**
  * A simple [Fragment] subclass.
@@ -23,9 +20,6 @@ import zoe.project.in2thewok.databinding.FragmentArticleBinding
  * create an instance of this fragment.
  */
 class ArticleFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
     private var articles = arrayListOf<String>()
@@ -57,8 +51,9 @@ class ArticleFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    //    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
-    inner class RecyclerAdapter(val linkArray: ArrayList<String>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
+
+    inner class RecyclerAdapter(val linkArray: ArrayList<String>,
+                                val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
             return ViewHolder(view)
@@ -74,8 +69,6 @@ class ArticleFragment : Fragment() {
         override fun getItemCount(): Int {
             return linkArray.size
         }
-
-//    TODO: Look at explanation of this fix
 
         override fun getItemId(position: Int): Long {
             return position.toLong()
@@ -98,15 +91,4 @@ class ArticleFragment : Fragment() {
         }
 
     }
-
-//    companion object {
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            HomeFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
 }

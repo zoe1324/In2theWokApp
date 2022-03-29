@@ -12,6 +12,8 @@ import io.github.ponnamkarthik.richlinkpreview.RichLinkView
 import io.github.ponnamkarthik.richlinkpreview.ViewListener
 import zoe.project.in2thewok.databinding.FragmentInfoBinding
 
+@Suppress("EmptyFunctionBlock")
+
 /**
  * A simple [Fragment] subclass.
  * Use the [InfoFragment.newInstance] factory method to
@@ -41,7 +43,8 @@ class InfoFragment : Fragment() {
         _binding = null
     }
 
-    inner class RecyclerAdapter(val linkArray: ArrayList<String>, val layout: Int): RecyclerView.Adapter<InfoFragment.ViewHolder>(){
+    inner class RecyclerAdapter(val linkArray: ArrayList<String>,
+                                val layout: Int): RecyclerView.Adapter<InfoFragment.ViewHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
             return ViewHolder(view)

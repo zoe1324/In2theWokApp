@@ -18,6 +18,8 @@ import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.ActivityHomeBinding
 import java.lang.Exception
 
+@Suppress("TooManyFunctions", "TooGenericExceptionCaught", "EmptyFunctionBlock")
+
 class HomeActivity : AppCompatActivity(), Communicator{
     private lateinit var binding: ActivityHomeBinding
     private lateinit var homeFragment: HomeFragment
@@ -28,7 +30,8 @@ class HomeActivity : AppCompatActivity(), Communicator{
     private lateinit var recipeFragment: RecipeFragment
     private lateinit var auth: FirebaseAuth
     private val articleCollectionRef = Firebase.firestore.collection("articles").document("fun").collection("fun_facts")
-    private val healthArticleCollectionRef = Firebase.firestore.collection("articles").document("health").collection("health_articles")
+    private val healthArticleCollectionRef = Firebase.firestore.collection("articles")
+        .document("health").collection("health_articles")
     private val postCollectionRef = Firebase.firestore.collection("posts")
     private val personCollectionRef = Firebase.firestore.collection("people")
     val articles = arrayListOf<String>()
@@ -67,19 +70,19 @@ class HomeActivity : AppCompatActivity(), Communicator{
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
                 R.id.home -> {
-                    replaceFragment(R.id.frag_layout, homeFragment)
+                    replaceFragment(homeFragment)
                 }
                 R.id.profile -> {
-                    replaceFragment(R.id.frag_layout, profileFragment)
+                    replaceFragment(profileFragment)
                 }
                 R.id.add -> {
-                    replaceFragment(R.id.frag_layout, addFragment)
+                    replaceFragment(addFragment)
                 }
                 R.id.articles -> {
-                    replaceFragment(R.id.frag_layout, articleFragment)
+                    replaceFragment(articleFragment)
                 }
                 R.id.info -> {
-                    replaceFragment(R.id.frag_layout, infoFragment)
+                    replaceFragment(infoFragment)
                 }
             }
             true
@@ -188,7 +191,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
                     document.toObject<Post>()?.let { bookmarkedPosts.add(it) }
                 }
             }
-            replaceFragment(R.id.frag_layout, homeFragment)
+            replaceFragment(homeFragment)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
@@ -223,7 +226,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
-    fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
+    fun AppCompatActivity.replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frag_layout, fragment)
         transaction.commit()
@@ -243,7 +246,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         bundle.putStringArrayList("comments", post.comments)
         recipeFragment = RecipeFragment()
         recipeFragment.arguments = bundle
-        replaceFragment(R.id.frag_layout, recipeFragment)
+        replaceFragment(recipeFragment)
     }
 
     override fun updatePostList() {
@@ -260,5 +263,8 @@ class HomeActivity : AppCompatActivity(), Communicator{
             startActivity(it)
             finish()
         }
+    }
+
+    override fun onBackPressed() {
     }
 }
