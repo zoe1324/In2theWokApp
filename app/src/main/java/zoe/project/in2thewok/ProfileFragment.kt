@@ -21,13 +21,13 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentProfileBinding
 
-@Suppress("WildcardImport", "TooGenericExceptionCaught")
-
 /**
  * A simple [Fragment] subclass.
  * Use the [ProfileFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+@Suppress("TooGenericExceptionCaught", "WildcardImport")
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null

@@ -25,16 +25,19 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
 
-@Suppress("WildcardImport", "TooGenericExceptionCaught")
+
 
 private lateinit var communicator: Communicator
 lateinit var auth: FirebaseAuth
+
+@Suppress("TooGenericExceptionCaught", "WildcardImport")
 
 /**
  * A simple [Fragment] subclass.
  * Use the [AddFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class AddFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private var imageUri : Uri? = null
