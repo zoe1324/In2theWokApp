@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.TextView
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +29,7 @@ import zoe.project.in2thewok.databinding.FragmentProfileBinding
  * create an instance of this fragment.
  */
 
-@Suppress("TooGenericExceptionCaught", "WildcardImport")
+@Suppress("TooGenericExceptionCaught")
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null

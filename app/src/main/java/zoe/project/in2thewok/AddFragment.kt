@@ -9,7 +9,9 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.*
+import android.widget.TextView
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -25,18 +27,16 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
 
-
-
 private lateinit var communicator: Communicator
 lateinit var auth: FirebaseAuth
-
-@Suppress("TooGenericExceptionCaught", "WildcardImport")
 
 /**
  * A simple [Fragment] subclass.
  * Use the [AddFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+@Suppress("TooGenericExceptionCaught")
 
 class AddFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
