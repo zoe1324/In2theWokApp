@@ -1,139 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:theme="@style/Theme.PrototypeCS408"
+    tools:context=".QuestionnaireActivity">
+
+    <ImageView
+        android:id="@+id/background_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/manek_singh_unsplash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/faded_black_bg"
         android:theme="@style/Theme.PrototypeCS408"
-        tools:context=".QuestionnaireActivity">
-
-        <ImageView
-            android:id="@+id/background_photo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/manek_singh_unsplash"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/faded_black_bg"
-            android:theme="@style/Theme.PrototypeCS408"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:context=".MainActivity">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".MainActivity">
 
 
-            <TextView
-                android:id="@+id/q1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="35sp"
-                android:paddingBottom="10sp"
-                android:text="@string/questionOne"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/a1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed" />
-
-            <EditText
-                android:id="@+id/a1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/q2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/q1"
-                app:layout_constraintTop_toBottomOf="@id/q1" />
-
-            <TextView
-                android:id="@+id/q2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="35sp"
-                android:paddingBottom="10sp"
-                android:text="@string/questionTwo"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/a2"
-                app:layout_constraintStart_toStartOf="@id/a1"
-                app:layout_constraintTop_toBottomOf="@id/a1" />
-
-            <EditText
-                android:id="@+id/a2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/q3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/q2"
-                app:layout_constraintTop_toBottomOf="@id/q2" />
-
-            <TextView
-                android:id="@+id/q3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="35sp"
-                android:paddingBottom="10sp"
-                android:text="@string/questionThree"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/a3"
-                app:layout_constraintStart_toStartOf="@id/a2"
-                app:layout_constraintTop_toBottomOf="@id/a2" />
-
-            <EditText
-                android:id="@+id/a3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/q4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/q3"
-                app:layout_constraintTop_toBottomOf="@id/q3" />
-
-            <TextView
-                android:id="@+id/q4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="35sp"
-                android:paddingBottom="10sp"
-                android:text="@string/questionFour"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/a4"
-                app:layout_constraintStart_toStartOf="@id/a3"
-                app:layout_constraintTop_toBottomOf="@id/a3" />
-
-            <EditText
-                android:id="@+id/a4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/q4"
-                app:layout_constraintTop_toBottomOf="@id/q4" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/btnSubmit"
+        <TextView
+            android:id="@+id/q1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/submit"
-            android:textSize="12sp"
+            android:paddingTop="35sp"
+            android:paddingBottom="10sp"
+            android:text="@string/questionOne"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/a1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/a1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/q2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/q1"
+            app:layout_constraintTop_toBottomOf="@id/q1" />
+
+        <TextView
+            android:id="@+id/q2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="35sp"
+            android:paddingBottom="10sp"
+            android:text="@string/questionTwo"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/a2"
+            app:layout_constraintStart_toStartOf="@id/a1"
+            app:layout_constraintTop_toBottomOf="@id/a1" />
+
+        <EditText
+            android:id="@+id/a2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/q3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/q2"
+            app:layout_constraintTop_toBottomOf="@id/q2" />
+
+        <TextView
+            android:id="@+id/q3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="35sp"
+            android:paddingBottom="10sp"
+            android:text="@string/questionThree"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/a3"
+            app:layout_constraintStart_toStartOf="@id/a2"
+            app:layout_constraintTop_toBottomOf="@id/a2" />
+
+        <EditText
+            android:id="@+id/a3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/q4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/q3"
+            app:layout_constraintTop_toBottomOf="@id/q3" />
+
+        <TextView
+            android:id="@+id/q4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="35sp"
+            android:paddingBottom="10sp"
+            android:text="@string/questionFour"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/a4"
+            app:layout_constraintStart_toStartOf="@id/a3"
+            app:layout_constraintTop_toBottomOf="@id/a3" />
+
+        <EditText
+            android:id="@+id/a4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/q4"
+            app:layout_constraintTop_toBottomOf="@id/q4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
