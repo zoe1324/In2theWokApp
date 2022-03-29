@@ -86,6 +86,5 @@ class GetStartedActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-    }
+    override fun onBackPressed() {}
 }

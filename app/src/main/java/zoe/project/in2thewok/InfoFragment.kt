@@ -4,26 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import io.github.ponnamkarthik.richlinkpreview.RichLinkView
 import io.github.ponnamkarthik.richlinkpreview.ViewListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentInfoBinding
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -31,21 +18,9 @@ import zoe.project.in2thewok.databinding.FragmentInfoBinding
  * create an instance of this fragment.
  */
 class InfoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-//    private var param1: String? = null
-//    private var param2: String? = null
     private var _binding: FragmentInfoBinding? = null
     private val binding get() = _binding!!
     private var healthArticles = arrayListOf<String>()
-
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +40,7 @@ class InfoFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    //    inner class RecyclerAdapter(private val titles: ArrayList<String>, val details: ArrayList<String>, val images: ArrayList<Int>, val layout: Int): RecyclerView.Adapter<ArticleFragment.ViewHolder>(){
+
     inner class RecyclerAdapter(val linkArray: ArrayList<String>, val layout: Int): RecyclerView.Adapter<InfoFragment.ViewHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
@@ -79,8 +54,6 @@ class InfoFragment : Fragment() {
         override fun getItemCount(): Int {
             return linkArray.size
         }
-
-//    TODO: Look at explanation of this fix
 
         override fun getItemId(position: Int): Long {
             return position.toLong()
@@ -96,26 +69,9 @@ class InfoFragment : Fragment() {
 
         fun updateItems(title: String){
             urlPreview.setLink(title, object : ViewListener{
-                override fun onSuccess(status: Boolean) {
-
-                }
-
-                override fun onError(e: Exception?) {
-
-                }
+                override fun onSuccess(status: Boolean) {}
+                override fun onError(e: Exception?) {}
             })
         }
     }
-
-//    companion object {
-//        // TODO: Rename and change types and number of parameters
-//        @JvmStatic
-//        fun newInstance(param1: String, param2: String) =
-//            HomeFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(ARG_PARAM1, param1)
-//                    putString(ARG_PARAM2, param2)
-//                }
-//            }
-//    }
 }

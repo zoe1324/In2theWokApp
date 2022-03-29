@@ -91,13 +91,8 @@ class ArticleFragment : Fragment() {
 
         fun updateItems(title: String){
             urlPreview.setLink(title, object : ViewListener{
-                override fun onSuccess(status: Boolean) {
-
-                }
-
-                override fun onError(e: Exception?) {
-
-                }
+                override fun onSuccess(status: Boolean) {}
+                override fun onError(e: Exception?) {}
             })
 
         }

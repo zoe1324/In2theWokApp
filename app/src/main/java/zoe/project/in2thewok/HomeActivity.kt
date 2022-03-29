@@ -1,13 +1,10 @@
 package zoe.project.in2thewok
 
-//import android.content.Intent
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -49,8 +46,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        supportActionBar?.title = "Hello" + Firebase.auth.currentUser?.displayName
-//        supportActionBar?.show()
+        supportActionBar?.hide()
         homeFragment = HomeFragment()
         profileFragment = ProfileFragment()
         addFragment = AddFragment()
@@ -62,7 +58,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
 
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //Initialise the FirebaseAuth instance
         auth = Firebase.auth
         retrieveArticles()
         retrievePosts()
@@ -228,14 +223,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        supportActionBar?.hide()
-
-        //Initialise the FirebaseAuth instance
-        auth = Firebase.auth
-    }
-
     fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frag_layout, fragment)
@@ -259,7 +246,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
         replaceFragment(R.id.frag_layout, recipeFragment)
     }
 
-
     override fun updatePostList() {
         retrievePosts()
     }
@@ -274,7 +260,5 @@ class HomeActivity : AppCompatActivity(), Communicator{
             startActivity(it)
             finish()
         }
-    }
-    override fun onBackPressed() {
     }
 }
