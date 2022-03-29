@@ -152,7 +152,6 @@ class RecipeFragment : Fragment() {
                 commentsList?.add(comment)
                 docRef = Firebase.firestore.collection("posts").document(document.id)
                 docRef.update("comments", commentsList)
-//                communicator.updateBookmarkList(commentsList)
             }
             withContext(Dispatchers.Main){
                 Toast.makeText(context, "Successfully added comment", Toast.LENGTH_LONG).show()

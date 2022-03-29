@@ -28,7 +28,7 @@
             android:fontFamily="@font/roboto_light"
             android:paddingLeft="10dp"
             android:paddingTop="20dp"
-            android:text="Fun Fact Articles"
+            android:text="@string/funFactArticles"
             android:textColor="@color/okabe_ito_vermilion"
             android:textSize="30sp" />
     </LinearLayout>

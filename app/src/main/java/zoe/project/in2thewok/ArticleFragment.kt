@@ -19,19 +19,11 @@ import zoe.project.in2thewok.databinding.FragmentArticleBinding
  * Use the [ArticleFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class ArticleFragment : Fragment() {
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
     private var articles = arrayListOf<String>()
-
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,9 +52,6 @@ class ArticleFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//            holder.itemTitle.text = titles[position]
-//            holder.itemDescription.text = details[position]
-//            holder.itemImage.setImageResource(images[position])
             holder.updateItems(linkArray[position])
         }
 
