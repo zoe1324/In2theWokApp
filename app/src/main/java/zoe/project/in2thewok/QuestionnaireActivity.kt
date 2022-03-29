@@ -29,43 +29,41 @@ class QuestionnaireActivity : AppCompatActivity() {
         auth = Firebase.auth
         val currentUser = auth.currentUser
         val submitBtn = findViewById<Button>(R.id.btnSubmit)
-        val username = currentUser?.displayName.toString()
+        val username = currentUser?.displayName.toString().trim()
+
         submitBtn.setOnClickListener{
-            val q1 = findViewById<EditText>(R.id.a1).text.toString()
-            val q2 = findViewById<EditText>(R.id.a2).text.toString()
-            val q3 = findViewById<EditText>(R.id.a3).text.toString()
-            val q4 = findViewById<EditText>(R.id.a4).text.toString()
+
+// TODO: Consider a question list for ease of maintainability??
+//  But adding new questions means UI changes, maybe a for each question?
+
+            val q1 = findViewById<EditText>(R.id.a1).text.toString().trim()
+            val q2 = findViewById<EditText>(R.id.a2).text.toString().trim()
+            val q3 = findViewById<EditText>(R.id.a3).text.toString().trim()
+            val q4 = findViewById<EditText>(R.id.a4).text.toString().trim()
             val person = Person(username, q1, q2, q3, q4, currentUser?.uid.toString(), arrayListOf())
             savePerson(person)
-            Intent(this, HomeActivity::class.java).also {
-                startActivity(it)
-                finish()
-            }
         }
-
-//        val skipBtn = findViewById<Button>(R.id.btnSkip)
-//        skipBtn.setOnClickListener {
-////            var posts = mutableListOf<String>()
-////            var bookmarks = mutableListOf<String>()
-//            val person = Person(username, "You haven't told us yet!", "You haven't told us yet!","You haven't told us yet!", "You haven't told us yet!", currentUser?.uid.toString(), arrayListOf())
-//            savePerson(person)
-//            Intent(this, HomeActivity::class.java).also {
-//                startActivity(it)
-//                finish()
-//            }
-//        }
     }
 
     private fun savePerson(person: Person) = CoroutineScope(Dispatchers.IO).launch{
         try {
-            personCollectionRef.add(person).await()
-            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                Toast.makeText(this@QuestionnaireActivity, "Successfully saved data.", Toast.LENGTH_LONG).show()
-            }
+            personCollectionRef.add(person).addOnSuccessListener {
+                switchToHome()
+                Toast.makeText(this@QuestionnaireActivity,
+                    "Successfully saved data.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }.await()
         } catch(e: Exception){
-            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+            withContext(Dispatchers.Main) {
                 Toast.makeText(this@QuestionnaireActivity, e.message, Toast.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun switchToHome() {
+        Intent(this, HomeActivity::class.java).also {
+            startActivity(it)
         }
     }
 

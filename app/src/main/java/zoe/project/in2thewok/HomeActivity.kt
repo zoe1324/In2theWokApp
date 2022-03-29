@@ -64,8 +64,7 @@ class HomeActivity : AppCompatActivity(), Communicator{
         setContentView(binding.root)
         //Initialise the FirebaseAuth instance
         auth = Firebase.auth
-        retrieveFunArticles()
-        retrieveHealthArticles()
+        retrieveArticles()
         retrievePosts()
         retrievePersonAnswers()
 
@@ -74,23 +73,18 @@ class HomeActivity : AppCompatActivity(), Communicator{
             when (it.itemId){
                 R.id.home -> {
                     replaceFragment(R.id.frag_layout, homeFragment)
-//                    supportActionBar?.title = "Home"
                 }
                 R.id.profile -> {
                     replaceFragment(R.id.frag_layout, profileFragment)
-//                    supportActionBar?.title = "Profile"
                 }
                 R.id.add -> {
                     replaceFragment(R.id.frag_layout, addFragment)
-//                    supportActionBar?.title = "Create New Post"
                 }
                 R.id.articles -> {
                     replaceFragment(R.id.frag_layout, articleFragment)
-//                    supportActionBar?.title = "Fun Food Articles/Reminders to Eat Healthily"
                 }
                 R.id.info -> {
                     replaceFragment(R.id.frag_layout, infoFragment)
-//                    supportActionBar?.title = "Nutritional Information"
                 }
             }
             true
@@ -117,42 +111,29 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
 
     }
-    private fun retrieveFunArticles() = CoroutineScope(Dispatchers.IO).launch{
+    private fun retrieveArticles() = CoroutineScope(Dispatchers.IO).launch{
         try {
-            val querySnapshot = articleCollectionRef
+            var querySnapshot = articleCollectionRef
                 .get()
                 .await()
             for (document in querySnapshot.documents) {
                 val url = "${document["url"]}"
                 articles.add(url)
             }
-
-        } catch (e: Exception){
-            withContext(Dispatchers.Main) {
-                Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    private fun retrieveHealthArticles() = CoroutineScope(Dispatchers.IO).launch{
-        try {
-            val querySnapshot = healthArticleCollectionRef
+            querySnapshot = healthArticleCollectionRef
                 .get()
                 .await()
             for (document in querySnapshot.documents) {
                 val url = "${document["url"]}"
                 healthArticles.add(url)
             }
+
         } catch (e: Exception){
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@HomeActivity, e.message, Toast.LENGTH_LONG).show()
             }
         }
     }
-
-//    private fun refreshRecommendedPosts() = CoroutineScope(Dispatchers.IO).launch{
-//        recs.clear()
-//    }
 
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
 
@@ -286,17 +267,10 @@ class HomeActivity : AppCompatActivity(), Communicator{
         auth = Firebase.auth
     }
 
-
-
-    inline fun FragmentManager.doTransaction(func: FragmentTransaction.() ->
-    FragmentTransaction
-    ) {
-        beginTransaction().func().commit()
-    }
-
-
     fun AppCompatActivity.replaceFragment(frameId: Int, fragment: Fragment) {
-        supportFragmentManager.doTransaction{replace(frameId, fragment)}
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frag_layout, fragment)
+        transaction.commit()
     }
 
     override fun recipePassComm(post: Post) {
@@ -326,24 +300,12 @@ class HomeActivity : AppCompatActivity(), Communicator{
         retrieveBookmarkedPosts()
     }
 
-    override fun updateRecList() {
-//        retrieveRecPosts()
-    }
-
     override fun signOut() {
         Intent(this, MainActivity::class.java).also {
             startActivity(it)
             finish()
         }
     }
-//
-//    override fun updateComments() {
-//
-//    }
-
-
-//    fun AppCompatActivity.removeFragment(fragment: Fragment) {
-//        supportFragmentManager.doTransaction{remove(fragment)}
-//    }
-
+    override fun onBackPressed() {
+    }
 }

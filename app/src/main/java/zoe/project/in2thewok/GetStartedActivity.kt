@@ -17,17 +17,14 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class GetStartedActivity : AppCompatActivity() {
-    //Declaring an instance of FirebaseAuth
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_get_started)
             supportActionBar?.hide()
-
-            //Initialise the FirebaseAuth instance
             auth = Firebase.auth
-
             val getStartedBtn = findViewById<Button>(R.id.btnGetStarted)
 
             getStartedBtn.setOnClickListener {
@@ -37,34 +34,38 @@ class GetStartedActivity : AppCompatActivity() {
 
     public override fun onStart(){
         super.onStart()
-        //Check if user is signed in (non-null) and update UI accordingly
-//        val currentUser = auth.currentUser
-//        if(currentUser != null) {
-//            Intent(this, HomeActivity::class.java).also {
-//                startActivity(it)
-//            }
-//        }
-//
     }
 
     private fun registerUsername(){
-        val username = findViewById<EditText>(R.id.teUsername).text.toString()
-        if(username.isNotEmpty()){
 
-            CoroutineScope(Dispatchers.IO).launch { //learn what this means??
+        val username = findViewById<EditText>(R.id.teUsername).text.toString().trim()
+
+        if(username.isNotEmpty()){
+            CoroutineScope(Dispatchers.IO).launch {
                 val user = auth.currentUser
                 val usernameSet = UserProfileChangeRequest.Builder()
                         .setDisplayName(username)
                         .build()
                 try {
-                    if(user != null) {
-                        user.updateProfile(usernameSet).await()
+                    user?.updateProfile(usernameSet)?.addOnSuccessListener {
+                        Toast.makeText(this@GetStartedActivity,
+                            "Successfully registered username",
+                            Toast.LENGTH_LONG
+                        ).show()
                         startQuestionnaire()
-                    }
+                    }?.addOnFailureListener {
+                        Toast.makeText(this@GetStartedActivity,
+                            "Failed to register username, please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }?.await()
 
-                } catch (e: Exception) { //if something goes wrong in registration
+                } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@GetStartedActivity, e.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@GetStartedActivity,
+                            e.message,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
@@ -87,12 +88,4 @@ class GetStartedActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
     }
-
-//    private fun regUsername(){
-//        auth = FirebaseAuth.getInstance()
-//        val user = auth.currentUser
-//        val userSetUp = UserProfileChangeRequest.Builder()
-//        userSetUp.displayName = username
-//        userSetUp.build()
-//    }
 }

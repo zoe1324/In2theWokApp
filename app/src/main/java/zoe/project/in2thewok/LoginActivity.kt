@@ -16,17 +16,14 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
-    //Declaring an instance of FirebaseAuth
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
-
-        //Initialise the FirebaseAuth instance
         auth = Firebase.auth
-
         val loginBtn = findViewById<Button>(R.id.btnLogin)
 
         loginBtn.setOnClickListener {
@@ -36,26 +33,34 @@ class LoginActivity : AppCompatActivity() {
 
     public override fun onStart(){
         super.onStart()
-
-        //Check if user is signed in (non-null) and update UI accordingly
-        val currentUser = auth.currentUser
-
-        if(currentUser != null) {
-            switchToHome()
-        }
     }
 
     private fun loginUser(){
-        val email = findViewById<EditText>(R.id.teLoginEmail).text.toString()
-        val password = findViewById<EditText>(R.id.teLoginPassword).text.toString()
+
+        val email = findViewById<EditText>(R.id.teLoginEmail).text.toString().trim()
+        val password = findViewById<EditText>(R.id.teLoginPassword).text.toString().trim()
+
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            CoroutineScope(Dispatchers.IO).launch { //learn what this means??
-                try { //to register the user
-                    auth.signInWithEmailAndPassword(email, password).await()
-                    switchToHome()
-                } catch (e: Exception) { //if something goes wrong in login
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+                        Toast.makeText(this@LoginActivity,
+                            "Login successful",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        switchToHome()
+                    }.addOnFailureListener{
+                        Toast.makeText(this@LoginActivity,
+                            "Login failed, please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }.await()
+                } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@LoginActivity, e.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LoginActivity,
+                            e.message,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
@@ -70,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun switchToHome() {
         Intent(this, HomeActivity::class.java).also {
-                    startActivity(it)
+            startActivity(it)
         }
     }
 }

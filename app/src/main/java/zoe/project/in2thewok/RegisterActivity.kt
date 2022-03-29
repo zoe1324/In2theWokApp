@@ -17,17 +17,14 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class RegisterActivity : AppCompatActivity() {
-    //Declaring an instance of FirebaseAuth
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         supportActionBar?.hide()
-
-        //Initialise the FirebaseAuth instance
         auth = Firebase.auth
-
         val registerBtn = findViewById<Button>(R.id.btnRegister)
 
         registerBtn.setOnClickListener {
@@ -37,40 +34,43 @@ class RegisterActivity : AppCompatActivity() {
 
     public override fun onStart(){
         super.onStart()
-
-        //Check if user is signed in (non-null) and update UI accordingly
-        val currentUser = auth.currentUser
-
-        if(currentUser != null) {
-            Intent(this, HomeActivity::class.java).also {
-                startActivity(it)
-            }
-        }
-
     }
 
     private fun registerUser() {
-        val email = findViewById<EditText>(R.id.teEmail).text.toString()
-        val password = findViewById<EditText>(R.id.tePassword).text.toString()
-        if(email.isNotEmpty() && password.isNotEmpty()){
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    try { //to register the user
-                        auth.createUserWithEmailAndPassword(email, password).await()
+
+        val email = findViewById<EditText>(R.id.teEmail).text.toString().trim()
+        val password = findViewById<EditText>(R.id.tePassword).text.toString().trim()
+
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
+                        Toast.makeText(this@RegisterActivity,
+                            "Account successfully registered",
+                            Toast.LENGTH_LONG
+                        ).show()
                         switchToGetStarted()
-                    } catch (e: Exception) { //if something goes wrong in registration
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(this@RegisterActivity, e.message, Toast.LENGTH_LONG).show()
-                        }
+                    }.addOnFailureListener{
+                        Toast.makeText(this@RegisterActivity,
+                            "Failed to register, please try again",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }.await()
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@RegisterActivity,
+                            e.message,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
-            } else {
-                Toast.makeText(
-                    this@RegisterActivity,
-                    "Please enter email and password",
-                    Toast.LENGTH_LONG
-                ).show()
             }
+        } else {
+            Toast.makeText(
+                this@RegisterActivity,
+                "Please enter email and password",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

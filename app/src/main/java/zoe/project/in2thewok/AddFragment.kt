@@ -29,12 +29,10 @@ import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.FragmentAddBinding
 
 // TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+//private const val ARG_PARAM1 = "param1"
+//private const val ARG_PARAM2 = "param2"
 private lateinit var communicator: Communicator
 lateinit var auth: FirebaseAuth
-//Users could hold a collection of post ids only, that match up to an id that is in a separate posts collection
 
 /**
  * A simple [Fragment] subclass.
@@ -44,15 +42,13 @@ lateinit var auth: FirebaseAuth
 
 // TODO: Don't upload photo to Firebase before the post is done? or delete off the database if user clears it/changes photo
 
-// TODO: Post some actual example recipes
-
 // TODO: Check if regex is necessary, probably not
 
 
 class AddFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+//    private var param1: String? = null
+//    private var param2: String? = null
     private lateinit var auth: FirebaseAuth
     private var imageUri : Uri? = null
     private var _binding: FragmentAddBinding? = null
@@ -62,13 +58,85 @@ class AddFragment : Fragment() {
     private var remoteUri: String? = null
     private val ingredients = ArrayList<String>()
     private val steps = ArrayList<String>()
+    private var step = ""
+    private var ingredient = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        arguments?.let {
+//            param1 = it.getString(ARG_PARAM1)
+//            param2 = it.getString(ARG_PARAM2)
+//        }
+//    }
+    private fun addIngredient(){
+        ingredient = binding.etAddIngredient.text.toString()
+        val tv = TextView(context?.applicationContext)
+        tv.id = View.generateViewId()
+        tv.text = ingredient
+        ingredients.add(ingredient)
+        binding.llIngredients.addView(tv)
+        val params = tv.layoutParams as LinearLayout.LayoutParams
+        params.width = MATCH_PARENT
+        params.height = WRAP_CONTENT
+        tv.requestLayout()
+        binding.etAddIngredient.text.clear()
+    }
+
+    private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
+        val context = context?.applicationContext
+        try {
+            //            personCollectionRef.add(person).await()
+            //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()
+            val ref = postCollectionRef.add(post)
+                .await()
+            val doc = ref.update("postID", ref.id)
+            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+                Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
+                clearAll()
+    //                binding.recipeTitle.text.clear()
+    //                binding.cuisineType.text.clear()
+    //                binding.recipeStory.text.clear()
+    //                binding.tvUploadPhoto.text = "Add A Photo"
+    //                binding.imgUpload.visibility = INVISIBLE
+    //                binding.llSteps.removeAllViews()
+    //                binding.llIngredients.removeAllViews()
+    //                ingredients.removeAll(ingredients)
+    //                steps.removeAll(steps)
+    //                imageUri = null
+    //                remoteUri = null
+            }
+            communicator.updatePostList()
+        } catch(e: Exception){
+            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
+                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+            }
         }
+    }
+
+    private fun addStep(){
+        step = binding.etAddStep.text.toString()
+        val tv = TextView(context?.applicationContext)
+        tv.id = View.generateViewId()
+        tv.text = step
+        steps.add(step)
+        binding.llSteps.addView(tv)
+        val params = tv.layoutParams as LinearLayout.LayoutParams
+        params.width = MATCH_PARENT
+        params.height = WRAP_CONTENT
+        tv.requestLayout()
+        binding.etAddStep.text.clear()
+    }
+
+    private fun clearAll(){
+        binding.recipeTitle.text.clear()
+        binding.cuisineType.text.clear()
+        binding.recipeStory.text.clear()
+        binding.tvUploadPhoto.text = "Add A Photo"
+        binding.imgUpload.visibility = INVISIBLE
+        binding.llSteps.removeAllViews()
+        binding.llIngredients.removeAllViews()
+        ingredients.removeAll(ingredients)
+        steps.removeAll(steps)
     }
 
     override fun onCreateView(
@@ -78,6 +146,7 @@ class AddFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         communicator = activity as Communicator
+
         if (!remoteUri.equals(null)) {
             Picasso.get()
                 .load(remoteUri)
@@ -86,32 +155,34 @@ class AddFragment : Fragment() {
         }
 
         if(ingredients.isNotEmpty()){
-            for(ingredient in ingredients){
-                val tv = TextView(context?.applicationContext)
-                tv.id = View.generateViewId()
-                tv.text = ingredient
-                binding.llIngredients.addView(tv)
-                val params = tv.layoutParams as LinearLayout.LayoutParams
-                params.width = MATCH_PARENT
-                params.height = WRAP_CONTENT
-                tv.requestLayout()
-            }
+            populateIngredients()
+//            for(ingredient in ingredients){
+//                val tv = TextView(context?.applicationContext)
+//                tv.id = View.generateViewId()
+//                tv.text = ingredient
+//                binding.llIngredients.addView(tv)
+//                val params = tv.layoutParams as LinearLayout.LayoutParams
+//                params.width = MATCH_PARENT
+//                params.height = WRAP_CONTENT
+//                tv.requestLayout()
+//            }
         }
         if(steps.isNotEmpty()){
-            for(step in steps){
-                val tv = TextView(context?.applicationContext)
-                tv.id = View.generateViewId()
-                tv.text = step
-                binding.llSteps.addView(tv)
-                val params = tv.layoutParams as LinearLayout.LayoutParams
-                params.width = MATCH_PARENT
-                params.height = WRAP_CONTENT
-                tv.requestLayout()
-            }
+            populateSteps()
+//            for(step in steps){
+//                val tv = TextView(context?.applicationContext)
+//                tv.id = View.generateViewId()
+//                tv.text = step
+//                binding.llSteps.addView(tv)
+//                val params = tv.layoutParams as LinearLayout.LayoutParams
+//                params.width = MATCH_PARENT
+//                params.height = WRAP_CONTENT
+//                tv.requestLayout()
+//            }
         }
 
         binding.btnUploadData.setOnClickListener{
-            if(binding.recipeTitle.text.toString() != "" && binding.cuisineType.text.toString() != "" && binding.recipeStory.text.toString() != "" && ingredients.isNotEmpty() && steps.isNotEmpty()){
+            if(!textFieldsEmpty() && ingredients.isNotEmpty() && steps.isNotEmpty()){
                 val post = Post(null, auth.currentUser?.uid.toString(), auth.currentUser?.displayName.toString(),
                     remoteUri, null, binding.recipeTitle.text.toString(), ingredients, binding.cuisineType.text.toString().lowercase(), steps, binding.recipeStory.text.toString(), arrayListOf())
                 addPost(post)
@@ -120,44 +191,44 @@ class AddFragment : Fragment() {
             }
         }
 
-        var ingredient = ""
-        var step = ""
-
         binding.btnAddIngred.setOnClickListener{
-            ingredient = binding.etAddIngredient.text.toString()
-            val tv = TextView(context?.applicationContext)
-            tv.id = View.generateViewId()
-            tv.text = ingredient
-            ingredients.add(ingredient)
-            binding.llIngredients.addView(tv)
-            val params = tv.layoutParams as LinearLayout.LayoutParams
-            params.width = MATCH_PARENT
-            params.height = WRAP_CONTENT
-            tv.requestLayout()
-            binding.etAddIngredient.text.clear()
+            addIngredient()
+//            ingredient = binding.etAddIngredient.text.toString()
+//            val tv = TextView(context?.applicationContext)
+//            tv.id = View.generateViewId()
+//            tv.text = ingredient
+//            ingredients.add(ingredient)
+//            binding.llIngredients.addView(tv)
+//            val params = tv.layoutParams as LinearLayout.LayoutParams
+//            params.width = MATCH_PARENT
+//            params.height = WRAP_CONTENT
+//            tv.requestLayout()
+//            binding.etAddIngredient.text.clear()
         }
 
         binding.btnAddSteps.setOnClickListener{
-            step = binding.etAddStep.text.toString()
-            val tv = TextView(context?.applicationContext)
-            tv.id = View.generateViewId()
-            tv.text = step
-            steps.add(step)
-            binding.llSteps.addView(tv)
-            val params = tv.layoutParams as LinearLayout.LayoutParams
-            params.width = MATCH_PARENT
-            params.height = WRAP_CONTENT
-            tv.requestLayout()
-            binding.etAddStep.text.clear()
+            addStep()
+//            step = binding.etAddStep.text.toString()
+//            val tv = TextView(context?.applicationContext)
+//            tv.id = View.generateViewId()
+//            tv.text = step
+//            steps.add(step)
+//            binding.llSteps.addView(tv)
+//            val params = tv.layoutParams as LinearLayout.LayoutParams
+//            params.width = MATCH_PARENT
+//            params.height = WRAP_CONTENT
+//            tv.requestLayout()
+//            binding.etAddStep.text.clear()
         }
         binding.btnClearAll.setOnClickListener{
-            binding.recipeTitle.text.clear()
-            binding.cuisineType.text.clear()
-            binding.recipeStory.text.clear()
-            binding.tvUploadPhoto.text = "Add A Photo"
-            binding.imgUpload.visibility = INVISIBLE
-            binding.llSteps.removeAllViews()
-            binding.llIngredients.removeAllViews()
+            clearAll()
+//            binding.recipeTitle.text.clear()
+//            binding.cuisineType.text.clear()
+//            binding.recipeStory.text.clear()
+//            binding.tvUploadPhoto.text = "Add A Photo"
+//            binding.imgUpload.visibility = INVISIBLE
+//            binding.llSteps.removeAllViews()
+//            binding.llIngredients.removeAllViews()
         }
 
         val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){
@@ -198,53 +269,48 @@ class AddFragment : Fragment() {
         _binding = null
     }
 
-    private fun addPost(post: Post) = CoroutineScope(Dispatchers.IO).launch{
-        val context = context?.applicationContext
-        try {
-            //            personCollectionRef.add(person).await()
-            //            personCollectionRef.document(auth.currentUser?.uid.toString()).collection("posts").add(post).await()
-            val ref = postCollectionRef.add(post)
-                .await()
-            val doc = ref.update("postID", ref.id)
-            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                Toast.makeText(context, "Successfully made post.", Toast.LENGTH_LONG).show()
-                binding.recipeTitle.text.clear()
-                binding.cuisineType.text.clear()
-                binding.recipeStory.text.clear()
-                binding.tvUploadPhoto.text = "Add A Photo"
-                binding.imgUpload.visibility = INVISIBLE
-                binding.llSteps.removeAllViews()
-                binding.llIngredients.removeAllViews()
-                ingredients.removeAll(ingredients)
-                steps.removeAll(steps)
-//                imageUri = null
-//                remoteUri = null
-            }
-            communicator.updatePostList()
-        } catch(e: Exception){
-            withContext(Dispatchers.Main) {//Dispatchers.Main sends to the UI
-                Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
-            }
+    private fun populateIngredients(){
+        for(ingredient in ingredients){
+            val tv = TextView(context?.applicationContext)
+            tv.id = View.generateViewId()
+            tv.text = ingredient
+            binding.llIngredients.addView(tv)
+            val params = tv.layoutParams as LinearLayout.LayoutParams
+            params.width = MATCH_PARENT
+            params.height = WRAP_CONTENT
+            tv.requestLayout()
         }
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun populateSteps(){
+        for(step in steps){
+            val tv = TextView(context?.applicationContext)
+            tv.id = View.generateViewId()
+            tv.text = step
+            binding.llSteps.addView(tv)
+            val params = tv.layoutParams as LinearLayout.LayoutParams
+            params.width = MATCH_PARENT
+            params.height = WRAP_CONTENT
+            tv.requestLayout()
+        }
     }
+
+    private fun textFieldsEmpty() : Boolean{
+        if (binding.recipeTitle.text.toString() != "" && binding.cuisineType.text.toString() != "" && binding.recipeStory.text.toString() != "" ){
+            return false
+        }
+        return true
+    }
+
+//    companion object {
+//        // TODO: Rename and change types and number of parameters
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            HomeFragment().apply {
+//                arguments = Bundle().apply {
+//                    putString(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
+//                }
+//            }
+//    }
 }
