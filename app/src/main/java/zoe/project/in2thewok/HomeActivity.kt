@@ -156,42 +156,16 @@ class HomeActivity : AppCompatActivity(), Communicator{
     private fun initRecsAndBookmarkPosts() = CoroutineScope(Dispatchers.IO).launch {
         try{
             recPosts.clear()
-//            for(rec in recs){
-                val querySnapshotQ1 = postCollectionRef
-                    .whereEqualTo("cuisineType", q1.toString().lowercase())
-                    .get()
-                    .await()
-
-                for (document in querySnapshotQ1.documents) {
-                    document.toObject<Post>()?.let { recPosts.add(it) }
-                }
-                val querySnapshotQ2 = postCollectionRef
-                    .whereEqualTo("cuisineType", q2.toString().lowercase())
-                    .get()
-                    .await()
-
-                for (document in querySnapshotQ2.documents) {
-                    document.toObject<Post>()?.let { recPosts.add(it) }
-                }
-                val querySnapshotQ3 = postCollectionRef
-                    .whereEqualTo("cuisineType", q3.toString().lowercase())
-                    .get()
-                    .await()
-
-                for (document in querySnapshotQ3.documents) {
-                    document.toObject<Post>()?.let { recPosts.add(it) }
-                }
-                val querySnapshotQ4 = postCollectionRef
+                var querySnapshot = postCollectionRef
                     .whereEqualTo("cuisineType", q4.toString().lowercase())
                     .get()
                     .await()
-
-                for (document in querySnapshotQ4.documents) {
+                for (document in querySnapshot.documents) {
                     document.toObject<Post>()?.let { recPosts.add(it) }
                 }
             if(recPosts.isEmpty()){
                 for(rec in recs){
-                    val querySnapshot = postCollectionRef
+                    querySnapshot = postCollectionRef
                         .whereEqualTo("postID", rec)
                         .get()
                         .await()
@@ -201,19 +175,14 @@ class HomeActivity : AppCompatActivity(), Communicator{
 
                 }
             }
-//            }
-
             bookmarkedPosts.clear()
-            var querySnapshot = personCollectionRef
+            querySnapshot = personCollectionRef
                 .whereEqualTo("userID", auth.currentUser?.uid.toString())
                 .get()
                 .await()
             for(document in querySnapshot!!.documents){
                 person = document.toObject<Person>()
                 bookmarked = person?.bookmarks
-//                bookmarksList?.add(postID)
-//                docRef = document.getDocumentReference("bookmarks")
-//                docRef?.update("bookmarks", bookmarksList)
             }
             for(bookmark in bookmarked!!){
                 querySnapshot = postCollectionRef
