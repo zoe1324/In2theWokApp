@@ -55,12 +55,11 @@ class HomeActivity : AppCompatActivity(), Communicator{
         addFragment = AddFragment()
         articleFragment = ArticleFragment()
         infoFragment = InfoFragment()
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //Hardcoded ids for functionality
         recs = arrayListOf("1lA1Z8C9xmUm8eqK7Abh","cZ96WPzc85g6ZuoPhg0j","iY8j4vktKX9MrnABO0lx")
-
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         auth = Firebase.auth
         retrieveArticles()
         retrievePosts()

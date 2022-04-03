@@ -121,16 +121,12 @@ class RecipeFragment : Fragment() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle("Write your comment below")
 
-        // Set up the input
         val input = EditText(context)
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.hint = "Enter Text"
         input.inputType = InputType.TYPE_CLASS_TEXT
         builder.setView(input)
 
-        // Set up the buttons
         builder.setPositiveButton("Send comment") { _, _ ->
-            // Here you get input text from the Edittext
             comments.add(auth.currentUser?.displayName + ": " + input.text.toString())
             binding.rvComments.adapter?.notifyDataSetChanged()
             addComment(auth.currentUser?.displayName + ": " + input.text.toString())
@@ -138,6 +134,7 @@ class RecipeFragment : Fragment() {
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
         builder.show()
     }
+
     private fun addComment(comment: String) = CoroutineScope(Dispatchers.IO).launch{
         try{
             var commentsList: ArrayList<String>?

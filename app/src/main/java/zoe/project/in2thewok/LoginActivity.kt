@@ -38,10 +38,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser(){
-
         val email = findViewById<EditText>(R.id.teLoginEmail).text.toString().trim()
         val password = findViewById<EditText>(R.id.teLoginPassword).text.toString().trim()
-
         if (email.isNotEmpty() && password.isNotEmpty()) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {

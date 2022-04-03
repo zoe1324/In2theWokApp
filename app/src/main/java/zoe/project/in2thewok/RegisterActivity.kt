@@ -39,10 +39,8 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser() {
-
         val email = findViewById<EditText>(R.id.teEmail).text.toString().trim()
         val password = findViewById<EditText>(R.id.tePassword).text.toString().trim()
-
         if (email.isNotEmpty() && password.isNotEmpty()) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
