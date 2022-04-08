@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_welcome)
         supportActionBar?.hide()
         auth = Firebase.auth
-
         val loginBtnMain = findViewById<Button>(R.id.btnLoginMain)
         val registerBtnMain = findViewById<Button>(R.id.btnRegisterMain)
 

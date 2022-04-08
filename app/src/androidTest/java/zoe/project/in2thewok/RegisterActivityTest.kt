@@ -1,7 +1,6 @@
 package zoe.project.in2thewok
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.activityScenarioRule
@@ -11,11 +10,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4ClassRunner::class)
-class MainActivityTest{
-    @get:Rule var activityScenarioRule = activityScenarioRule<MainActivity>()
+class RegisterActivityTest{
+    @get:Rule var activityScenarioRule = activityScenarioRule<RegisterActivity>()
     @Test
     fun checkActivityVisibility(){
-        onView(withId(R.id.welcomeActivity))
+        onView(withId(R.id.registerActivity))
             .check(matches(isDisplayed()))
     }
     @Test
@@ -24,19 +23,30 @@ class MainActivityTest{
             .check(matches(isDisplayed()))
     }
     @Test
+    fun checkingEditTextVisibility(){
+        onView(withId(R.id.teEmail))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.tePassword))
+            .check(matches(isDisplayed()))
+    }
+    @Test
     fun checkingTextVisibility(){
         onView(withId(R.id.in2thewok))
             .check(matches(isDisplayed()))
-        
+
         onView(withId(R.id.tvImageCreditMain))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.tvEmail))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.tvPassword))
             .check(matches(isDisplayed()))
     }
     @Test
     fun checkingButtonVisibility(){
-        onView(withId(R.id.btnLoginMain))
-            .check(matches(isDisplayed()))
-
-        onView(withId(R.id.btnRegisterMain))
+        onView(withId(R.id.btnRegister))
             .check(matches(isDisplayed()))
     }
     @Test
@@ -47,27 +57,13 @@ class MainActivityTest{
         onView(withId(R.id.tvImageCreditMain))
             .check(matches(withText(R.string.backgroundCredit)))
 
-        onView(withId(R.id.btnLoginMain))
-            .check(matches(withText(R.string.login)))
-
-        onView(withId(R.id.btnRegisterMain))
+        onView(withId(R.id.btnRegister))
             .check(matches(withText(R.string.register)))
-    }
-    @Test
-    fun navigateToLogin(){
-        onView(withId(R.id.btnLoginMain))
-            .perform(click())
 
-        onView(withId(R.id.loginActivity))
-            .check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmail))
+            .check(matches(withText(R.string.emailAddress)))
 
-    }
-    @Test
-    fun navigateToRegister(){
-        onView(withId(R.id.btnRegisterMain))
-            .perform(click())
-
-        onView(withId(R.id.registerActivity))
-            .check(matches(isDisplayed()))
+        onView(withId(R.id.tvPassword))
+            .check(matches(withText(R.string.choosePassword)))
     }
 }
