@@ -1,5 +1,5 @@
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/cvRecipe"
+    android:id="@+id/homeFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
