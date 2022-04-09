@@ -15,12 +15,27 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+/**
+ * [LoginActivity], a login page for the user, presents the application name,
+ * an email input field, password input field, to navigate to home page,
+ * changes to [HomeActivity] if user email and password match.
+ *
+ * @constructor Creates a new AppCompatActivity
+ * @suppress TooGenericExceptionCaught
+ */
 @Suppress("TooGenericExceptionCaught")
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
+    /**
+     * Creates the [LoginActivity], has button listener for
+     * login button. Switches to [HomeActivity] upon login button click, if user inputs are
+     * accepted via FirebaseAuth validation.
+     *
+     * @param savedInstanceState contains any data passed to the activity via Bundle
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -37,6 +52,13 @@ class LoginActivity : AppCompatActivity() {
         super.onStart()
     }
 
+    /**
+     * Attempts to log the user in based on their inputs found in
+     * teLogin and teLoginPassword. Uses CoRoutines to asynchronously sign the user in.
+     * Triggers switchToHome() method upon success of signInWithEmailAndPassword.
+     *
+     * @throws Exception if user input isn't accepted or db connection fails.
+     */
     private fun loginUser(){
         val email = findViewById<EditText>(R.id.teLoginEmail).text.toString().trim()
         val password = findViewById<EditText>(R.id.teLoginPassword).text.toString().trim()
@@ -73,6 +95,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Uses an Intent to launch the [HomeActivity] class.
+     */
     private fun switchToHome() {
         Intent(this, HomeActivity::class.java).also {
             startActivity(it)

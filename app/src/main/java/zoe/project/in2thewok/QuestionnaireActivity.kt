@@ -17,6 +17,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+/**
+ * [QuestionnaireActivity], a questionnaire page for the user, presents
+ * four questions and input fields, and a button to navigate to [HomeActivity],
+ * changes to [HomeActivity] if the user profile details successfully update on the db.
+ *
+ * @constructor Creates a new AppCompatActivity
+ * @suppress EmptyFunctionBlock
+ * @suppress TooGenericExceptionCaught
+ */
 @Suppress("EmptyFunctionBlock", "TooGenericExceptionCaught")
 
 class QuestionnaireActivity : AppCompatActivity() {
@@ -24,6 +33,15 @@ class QuestionnaireActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val personCollectionRef = Firebase.firestore.collection("people")
 
+    /**
+     * Creates the [QuestionnaireActivity], has button listener for
+     * submit button. Switches to [HomeActivity] upon submit button click.
+     * Triggers savePerson() upon submit button click. Creates new Person
+     * data class object using user's displayName, four question answers,
+     * their Firebase Auth userID and an empty arrayList for user bookmarks.
+     *
+     * @param savedInstanceState contains any data passed to the activity via Bundle
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questionnaire)
@@ -43,6 +61,14 @@ class QuestionnaireActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Attempts to save a new Person to 'people' collection on Firebase Firestore db.
+     * Uses CoRoutines to asynchronously save the Person object using the Firestore Collection Reference.
+     * Triggers switchToHome() method upon success of saving new Person.
+     *
+     * @param person contains current Person object to be saved to Firestore db.
+     * @throws Exception if user input isn't accepted or db connection fails.
+     */
     private fun savePerson(person: Person) = CoroutineScope(Dispatchers.IO).launch{
         try {
             personCollectionRef.add(person).addOnSuccessListener {
@@ -59,12 +85,18 @@ class QuestionnaireActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Uses an Intent to launch the [HomeActivity] class.
+     */
     private fun switchToHome() {
         Intent(this, HomeActivity::class.java).also {
             startActivity(it)
         }
     }
 
+    /**
+     * Suppresses back button, to prevent errors in account registration
+     */
     override fun onBackPressed() {
     }
 }

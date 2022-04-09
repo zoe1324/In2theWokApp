@@ -16,12 +16,28 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+/**
+ * [GetStartedActivity], a username entry page for the user, presents a welcome message,
+ * a username input field, and a button to navigate to questionnaire page,
+ * changes to [QuestionnaireActivity] if username successfully updates on the database.
+ *
+ * @constructor Creates a new AppCompatActivity
+ * @suppress EmptyFunctionBlock
+ * @suppress TooGenericExceptionCaught
+ */
 @Suppress("EmptyFunctionBlock", "TooGenericExceptionCaught")
 
 class GetStartedActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
+    /**
+     * Creates the [GetStartedActivity], has button listener for
+     * 'get started' button. Switches to [QuestionnaireActivity] upon 'get started' button click, and if
+     * username successfully updates on the db.
+     *
+     * @param savedInstanceState contains any data passed to the activity via Bundle
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_get_started)
@@ -38,6 +54,14 @@ class GetStartedActivity : AppCompatActivity() {
         super.onStart()
     }
 
+    /**
+     * Attempts to register a displayName to the FirebaseAuth instance created from
+     * registration, based on input on teUsername.
+     * Uses CoRoutines to asynchronously update user profile.
+     * Triggers startQuestionnaire() method upon success of updateProfile request.
+     *
+     * @throws Exception if db connection fails.
+     */
     private fun registerUsername(){
 
         val username = findViewById<EditText>(R.id.teUsername).text.toString().trim()
@@ -81,6 +105,9 @@ class GetStartedActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Uses an Intent to launch the [QuestionnaireActivity] class.
+     */
     private fun startQuestionnaire(){
         Intent(this, QuestionnaireActivity::class.java).also {
             startActivity(it)
@@ -88,5 +115,8 @@ class GetStartedActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Suppresses back button, to prevent errors in account registration
+     */
     override fun onBackPressed() {}
 }
