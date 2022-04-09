@@ -18,6 +18,18 @@ import kotlinx.coroutines.withContext
 import zoe.project.in2thewok.databinding.ActivityHomeBinding
 import java.lang.Exception
 
+/**
+ * [HomeActivity], handles several Fragments: [HomeFragment], [ProfileFragment],
+ * [AddFragment], [ArticleFragment], [InfoFragment] and [RecipeFragment]. Holds navigation bar,
+ * Holds a fragment container in which the screen displays a Fragment,
+ * depending on which navigation item is selected, swaps to RecipeFragment based on
+ * user selection of recipes.
+ *
+ * @constructor Creates a new AppCompatActivity, implements Communicator interface
+ * @suppress TooManyFunctions
+ * @suppress TooGenericExceptionCaught
+ * @suppress EmptyFunctionBlock
+ */
 @Suppress("TooManyFunctions", "TooGenericExceptionCaught", "EmptyFunctionBlock")
 
 class HomeActivity : AppCompatActivity(), Communicator{
@@ -47,6 +59,16 @@ class HomeActivity : AppCompatActivity(), Communicator{
     var q3: String? = null
     var q4: String? = null
 
+
+    /**
+     * Creates the [HomeActivity], has onItemSelectedListener for
+     * Navigation bar. Initially displays [HomeFragment] in the fragment container.
+     * Displays different fragments according to which item is selected by user.
+     * Contains a hardcoded list of recommendation IDs to use if system
+     * finds no recommendations for the user based on their questionnaire.
+     *
+     * @param savedInstanceState contains any data passed to the activity via Bundle
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -87,6 +109,14 @@ class HomeActivity : AppCompatActivity(), Communicator{
             true
         }
     }
+
+    /**
+     * Retrieves the user's questionnaire answers for display on user profile,
+     * will retrieve one person document matching userID to current FirebaseAuth ID.
+     * Triggers initRecsAndBookmarkPosts() function after db retrieval.
+     *
+     * @throws Exception if db retrieval fails
+     */
     private fun retrievePersonAnswers() = CoroutineScope(Dispatchers.IO).launch {
         try{
             var querySnapshot = personCollectionRef
@@ -108,6 +138,13 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
 
     }
+
+    /**
+     * Retrieves the fun fact and health article URLs from the article collection.
+     * These articles will be used in [ArticleFragment] and [InfoFragment].
+     *
+     * @throws Exception if db retrieval fails
+     */
     private fun retrieveArticles() = CoroutineScope(Dispatchers.IO).launch{
         try {
             var querySnapshot = articleCollectionRef
@@ -132,8 +169,14 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+    /**
+     * Retrieves the user's posts for display on user profile,
+     * will retrieve post documents with matching userID to current FirebaseAuth ID.
+     * Converts each post document to Post object.
+     *
+     * @throws Exception if db retrieval fails
+     */
     private fun retrievePosts() = CoroutineScope(Dispatchers.IO).launch {
-
         try {
             posts.clear()
             val querySnapshot = postCollectionRef
@@ -150,6 +193,16 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+    /**
+     * Initialises the user's recommendations and bookmarks for display on home page,
+     * will retrieve post documents to match the user's favourite cuisine type, and
+     * if the system finds none, will use hardcoded IDs instead. Then, the user's bookmarks
+     * are retrieved, with the postIDs being used to retrieve full Post objects.
+     * Updates the screen with [HomeFragment] after db retrieval complete by calling
+     * replaceFragment.
+     *
+     * @throws Exception if db retrieval fails
+     */
     private fun initRecsAndBookmarkPosts() = CoroutineScope(Dispatchers.IO).launch {
         try{
             recPosts.clear()
@@ -169,7 +222,6 @@ class HomeActivity : AppCompatActivity(), Communicator{
                     for(document in querySnapshot.documents){
                         document.toObject<Post>()?.let{recPosts.add(it)}
                     }
-
                 }
             }
             bookmarkedPosts.clear()
@@ -198,6 +250,11 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+    /**
+     * Retrieves user's bookmarked posts, updates bookmarked posts
+     *
+     * @throws Exception if db retrieval fails
+     */
     private fun retrieveBookmarkedPosts() = CoroutineScope(Dispatchers.IO).launch {
         try{
             bookmarkedPosts.clear()
@@ -225,12 +282,23 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+    /**
+     * Uses FragmentManager to switch fragment to the passed in [Fragment]
+     *
+     * @param fragment The fragment to be swithced to
+     */
     fun AppCompatActivity.replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frag_layout, fragment)
         transaction.commit()
     }
 
+    /**
+     * Bundles up all of the passed in recipe Post attributes to be passed to
+     * the [RecipeFragment]. Triggers replaceFragment() function with [RecipeFragment].
+     *
+     * @param post The Post object instance of the recipe tapped on by the user, in either [ProfileFragment] or [HomeFragment].
+     */
     override fun recipePassComm(post: Post) {
         val bundle = Bundle()
         bundle.putString("postID", post.postID)
@@ -248,15 +316,24 @@ class HomeActivity : AppCompatActivity(), Communicator{
         replaceFragment(recipeFragment)
     }
 
+    /**
+     * Called by [AddFragment], updates the list of user posts
+     */
     override fun updatePostList() {
         retrievePosts()
     }
 
+    /**
+     * Called by [RecipeFragment], updates user bookmarks when user bookmarks a post
+     */
     override fun updateBookmarkList(bookmarksList: ArrayList<String>?) {
         bookmarked = bookmarksList
         retrieveBookmarkedPosts()
     }
 
+    /**
+     * Called by [HomeFragment], when the user taps the 'Log Out' button.
+     */
     override fun signOut() {
         Intent(this, MainActivity::class.java).also {
             startActivity(it)
@@ -264,6 +341,9 @@ class HomeActivity : AppCompatActivity(), Communicator{
         }
     }
 
+    /**
+     * Suppresses back button, to prevent errors in account registration
+     */
     override fun onBackPressed() {
     }
 }
