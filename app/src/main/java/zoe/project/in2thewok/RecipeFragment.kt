@@ -2,19 +2,19 @@ package zoe.project.in2thewok
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
@@ -26,18 +26,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import zoe.project.in2thewok.InfoFragment.RecyclerAdapter
+import zoe.project.in2thewok.databinding.FragmentProfileBinding
 import zoe.project.in2thewok.databinding.FragmentRecipeBinding
 
+/**
+ * [RecipeFragment], A [Fragment] class displayed by [HomeActivity],
+ * linked via [FragmentRecipeBinding].
+ *
+ * @constructor Creates a new Fragment
+ * @suppress TooGenericExceptionCaught
+ */
 @Suppress("TooGenericExceptionCaught")
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RecipeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
 class RecipeFragment : Fragment() {
-
+    private lateinit var auth: FirebaseAuth
     private lateinit var communicator: Communicator
     private var _binding: FragmentRecipeBinding? = null
     private val binding get() = _binding!!
@@ -54,7 +57,12 @@ class RecipeFragment : Fragment() {
     var username: String? = null
     var cuisineType: String? = null
 
-
+    /**
+     * Creates [RecipeFragment], receives Post object data via Bundle, then
+     * retrieves each attribute and sets the corresponding variables.
+     *
+     * @param savedInstanceState contains any data passed to the fragment via Bundle
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
@@ -70,6 +78,14 @@ class RecipeFragment : Fragment() {
         cuisineType = arguments?.getString("cuisineType")
     }
 
+    /**
+     * Creates View for [RecipeFragment], has click listeners for commenting and bookmarking,
+     * sets RecyclerView Adapters
+     *
+     * @param inflater Layout inflater for [Fragment]
+     * @param container Container ViewGroup for [Fragment]
+     * @param savedInstanceState contains any data passed to the fragment via Bundle
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -83,8 +99,7 @@ class RecipeFragment : Fragment() {
             Picasso.get()
                 .load(imageURI)
                 .into(binding.ivRecipePhoto)
-        }
-        else{
+        } else {
             Picasso.get()
                 .load(R.drawable.cooking)
                 .into(binding.ivRecipePhoto)
@@ -104,11 +119,11 @@ class RecipeFragment : Fragment() {
         binding.rvComments.itemAnimator = DefaultItemAnimator()
         binding.rvComments.adapter = RecyclerAdapter(comments, R.layout.layout_text_layout)
 
-        binding.btnBookmarks.setOnClickListener{
+        binding.btnBookmarks.setOnClickListener {
             addBookmark(postID.toString())
         }
 
-        binding.btnComment.setOnClickListener{
+        binding.btnComment.setOnClickListener {
             showDialog()
         }
 
@@ -116,8 +131,11 @@ class RecipeFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Constructs and shows a custom dialog box for adding a comment
+     */
     @SuppressLint("NotifyDataSetChanged")
-    fun showDialog(){
+    fun showDialog() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle("Write your comment below")
 
@@ -135,41 +153,54 @@ class RecipeFragment : Fragment() {
         builder.show()
     }
 
-    private fun addComment(comment: String) = CoroutineScope(Dispatchers.IO).launch{
-        try{
+    /**
+     * Adds the user comment to the database list of comments associated with the Post
+     * in view
+     *
+     * @param comment The string containing the user comment
+     * @throws Exception if comment unsuccessfully added
+     */
+    private fun addComment(comment: String) = CoroutineScope(Dispatchers.IO).launch {
+        try {
             var commentsList: ArrayList<String>?
             var docRef: DocumentReference?
             val querySnapshot = postCollectionRef
                 .whereEqualTo("postID", postID)
                 .get()
                 .await()
-            for(document in querySnapshot!!.documents){
+            for (document in querySnapshot!!.documents) {
                 val post = document.toObject<Post>()
                 commentsList = post?.comments
                 commentsList?.add(comment)
                 docRef = Firebase.firestore.collection("posts").document(document.id)
                 docRef.update("comments", commentsList)
             }
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 Toast.makeText(context, "Successfully added comment", Toast.LENGTH_LONG).show()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                 println(e.message)
             }
         }
-
     }
-    private fun addBookmark(postID : String) = CoroutineScope(Dispatchers.IO).launch{
-        try{
+
+    /**
+     * Adds the postID to the database list of bookmarks associated with the current user
+     *
+     * @param postID The string containing the current postID
+     * @throws Exception if bookmark unsuccessfully added
+     */
+    private fun addBookmark(postID: String) = CoroutineScope(Dispatchers.IO).launch {
+        try {
             var bookmarksList: ArrayList<String>?
             var docRef: DocumentReference?
             val querySnapshot = personCollectionRef
                 .whereEqualTo("userID", auth.currentUser?.uid.toString())
                 .get()
                 .await()
-            for(document in querySnapshot!!.documents){
+            for (document in querySnapshot!!.documents) {
                 val person = document.toObject<Person>()
                 bookmarksList = person?.bookmarks
                 bookmarksList?.add(postID)
@@ -177,10 +208,10 @@ class RecipeFragment : Fragment() {
                 docRef.update("bookmarks", bookmarksList)
                 communicator.updateBookmarkList(bookmarksList)
             }
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 Toast.makeText(context, "Successfully added bookmark.", Toast.LENGTH_LONG).show()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
                 println(e.message)
@@ -189,41 +220,81 @@ class RecipeFragment : Fragment() {
 
     }
 
+    /**
+     * Destroys the Fragment View so it is no longer visible
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    inner class RecyclerAdapter(private val stringArray: ArrayList<String>,
-                                val layout: Int): RecyclerView.Adapter<RecipeFragment.ViewHolder>() {
+    /**
+     * [RecyclerAdapter] customised class, adapts arrayList of strings to fit in a RecyclerView
+     *
+     * @param stringArray The arrayList of strings being adapted
+     * @param layout The layout in which each link should be adapted to fit
+     * @constructor Creates a new Adapter for the RecyclerView
+     */
+    inner class RecyclerAdapter(
+        private val stringArray: ArrayList<String>,
+        val layout: Int
+    ) : RecyclerView.Adapter<RecipeFragment.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
             return ViewHolder(view)
         }
 
+        /**
+         * Updates the ViewHolder according to a given position
+         *
+         * @param holder The ViewHolder being updated
+         * @param position THe position in the array in which the current item is being adapted to fit
+         */
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.updateItems(stringArray[position])
         }
 
+        /**
+         * Returns the size of the arrayList being adapted
+         *
+         * @return stringArray.size
+         */
         override fun getItemCount(): Int {
             return stringArray.size
         }
 
+        /**
+         * Returns the id of the item in the arrayList being adapted
+         *
+         * @param position
+         * @return position.toLong()
+         */
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
+        /**
+         * Returns item view type
+         *
+         * @param position The current array position
+         * @return position
+         */
         override fun getItemViewType(position: Int): Int {
             return position
         }
 
     }
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var inputString: TextView = itemView.findViewById(R.id.tvString)
 
-        fun updateItems(string: String){
+        /**
+         * Updates each RecyclerView item to display the current string
+         *
+         * @param string The current string in the list being passed in
+         */
+        fun updateItems(string: String) {
             inputString.text = string
         }
     }
