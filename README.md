@@ -1,10 +1,10 @@
 # In2thewok
 
-##Download Android Studio
+## Download Android Studio
 
 To run the project, Android Studio is required. Installing Android Studio can be done here: https://developer.android.com/studio/install#:~:text=Launch%20the%20Android%20Studio%20DMG,Studio%20settings%2C%20then%20click%20OK.
 
-##Run Code in Android Studio
+## Run Code in Android Studio
 
 Open Android Studio, select 'Open'.
 
