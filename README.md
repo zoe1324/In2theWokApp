@@ -14,4 +14,4 @@ Click trust gradle project if a similar message appears.
 
 An emulator device is required to run the project on a virtual mobile phone. It is recommended that the app is run using the Pixel 4 API 30 device at least. The steps Android advises to add a new device can be found here: https://developer.android.com/studio/run/managing-avds
 
-The green Run 'app' button can be clicked to run the app using the virtual device, and may take some time to start the virtual device and install the application on it.
+The green Run 'app' button can be clicked to run the app using the virtual device, and may take some time to start the virtual device and install the application on it. If it seems to stop running without displaying the app, press Run again if it is green.
